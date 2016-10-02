@@ -17,7 +17,7 @@ def _get_arguments():
     return parser.parse_args()
 
 
-if __name__ == '__main__':
+def main():
     args = _get_arguments()
 
     if args.server:
@@ -25,3 +25,7 @@ if __name__ == '__main__':
 
     elif args.client:
         client.run(ip=args.ip, port=args.port, debug=args.debug)
+
+
+if __name__ == '__main__':
+    main()
