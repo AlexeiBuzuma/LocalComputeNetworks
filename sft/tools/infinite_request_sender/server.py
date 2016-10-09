@@ -1,11 +1,15 @@
 """ Dummy server
 """
 
+import os
 import socket
 from time import sleep
 
 
-def _run_server(port, debug):
+UDP_MESSAGE_SIZE = 4096
+
+
+def run_tcp_server(port, debug):
 
     server_sock = socket.socket()
     server_addr = ("", port)
@@ -32,4 +36,16 @@ def _run_server(port, debug):
             content = client_sock.recv(1024)
             sleep(0.3)
 
-run = _run_server
+
+def run_udp_server(port, debug):
+    server_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    server_addr = ("", port)
+    server_sock.bind(server_addr)
+
+    if debug:
+        print('Starting server on port: %d' % server_addr[1])
+
+    while True:
+        data, addr = server_sock.recvfrom(40000)
+        print(data[:20], " ... ", data[-10:])
+        sleep(0.01)

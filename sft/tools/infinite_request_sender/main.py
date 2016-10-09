@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 import argparse
-import server
-import client
+from server import run_tcp_server, run_udp_server
+from client import run_tcp_client, run_udp_client
 
 
 def _get_arguments():
 
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("-m", dest="mode", help="TCP or UDP mode", choices=["tcp", "udp"], required=True)
     parser.add_argument("-s", dest="server", help="Run script in server mode", action="store_true")
     parser.add_argument("-c", dest="client", help="Run script in client mode", action="store_true")
     parser.add_argument("-p", dest="port", help="Port for connect", default=9999)
@@ -20,11 +21,16 @@ def _get_arguments():
 def main():
     args = _get_arguments()
 
+    print(args.mode)
+
+    server_runner = run_udp_server if args.mode == "udp" else run_tcp_server
+    client_runner = run_udp_client if args.mode == "udp" else run_tcp_client
+
     if args.server:
-        server.run(port=args.port, debug=args.debug)
+        server_runner(port=args.port, debug=args.debug)
 
     elif args.client:
-        client.run(ip=args.ip, port=args.port, debug=args.debug)
+        client_runner(ip=args.ip, port=args.port, debug=args.debug)
 
 
 if __name__ == '__main__':
