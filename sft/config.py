@@ -30,8 +30,10 @@ class Config(metaclass=Singleton):
 
     def __init__(self):
 
+        # Needed for auto-complete
         self.tcp_buffer_size = None
         self.udp_buffer_size = None
+        self.accumulator_packet_size = None
 
         self.config = configparser.ConfigParser()
         self.config.read(CONFIG_PATH)
@@ -42,7 +44,7 @@ class Config(metaclass=Singleton):
         """
 
         str_fields = []
-        int_fields = ["tcp_buffer_size", "udp_buffer_size"]
+        int_fields = ["tcp_buffer_size", "udp_buffer_size", "accumulator_packet_size"]
         space_separated_list_fields = []
 
         try:
