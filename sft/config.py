@@ -1,6 +1,6 @@
 import os
 import configparser
-from sft.utils.singleton import Singleton
+from sft.utils.common import Singleton
 
 
 # Get path for config.
