@@ -14,7 +14,6 @@ def main():
     outputs = []
 
     while True:
-        print('iterate')
         readable, writable, exceptional = select.select(
             inputs, outputs, inputs)
         for sock in exceptional:
@@ -29,8 +28,12 @@ def main():
                 inputs.append(client_sock)
             else:
                 data = sock.recv(1024)
-                print(data)
-                sock.close()
+                if data:
+                    print(data)
+                else:
+                    sock.close()
+                    inputs.remove(sock)
+                    print('Client disconnected')
         time.sleep(0.2)
 
 
