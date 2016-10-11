@@ -7,10 +7,10 @@ class Singleton(type):
     """
 
     def __init__(cls, name, bases, dict):
-        super().__init__( name, bases, dict)
+        super().__init__(name, bases, dict)
         cls._instance = None
 
-    def __call__(cls, *args, **kw):
+    def __call__(cls, *args, **kwargs):
         if cls._instance is None:
-            cls._instance = super(Singleton, cls).__call__(*args, **kw)
+            cls._instance = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instance

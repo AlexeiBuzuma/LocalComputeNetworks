@@ -1,0 +1,15 @@
+CHANGES
+=======
+
+* Added basic functionality for session manager
+* Rename singleton.py to common.py
+* Move singleton to utils
+* Added data accumulator
+* Added functionality for using .ini config file
+* Added udp infinit sender
+* Added basic installer
+* Added infinit sender
+* Added speed metering utility
+* .gitignore file was updated
+* Remove unnecessary folders
+* Initial commit
