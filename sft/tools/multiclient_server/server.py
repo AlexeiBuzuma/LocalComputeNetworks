@@ -9,6 +9,7 @@ import select
 
 from port_for import select_random as get_random_port
 from sft.utils.collections import SockCollection
+from sft.config import Config
 
 
 logging.basicConfig(
@@ -28,6 +29,7 @@ def _parse_args():
 class SFTServer(object):
     def __init__(self, port=None):
         super().__init__()
+        self._conf = Config()
         self._sockets = SockCollection([], [])
 
         self._service_sock = self._create_socket_on_port(port=port)
@@ -52,7 +54,7 @@ class SFTServer(object):
         for sock in self._sockets.inputs:
             self._unregister_sock(sock)
         for sock in self._sockets.outputs:
-                self._unregister_sock(sock)
+            self._unregister_sock(sock)
 
     def _register_input_sock(self, sock):
         self._sockets.inputs.append(sock)
@@ -96,7 +98,7 @@ class SFTServer(object):
                 self._register_input_sock(client_sock)
             else:
                 client_addr = sock.getpeername()
-                data = sock.recv(1024)
+                data = sock.recv(self._conf.tcp_buffer_size)
                 if data:
                     LOG.info('%s:%d transmitted ' % client_addr + str(data))
                 else:

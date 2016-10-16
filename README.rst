@@ -12,6 +12,13 @@ Installation
 
   $ sudo -H pip install -e $SFT_ROOT_DIR
 
+In case of any difficulties with pip:
+
+.. code-block:: shell
+
+  $ sudo python setup.py clean --all
+  $ sudo python setup.py install --force
+
 
 =====
 Usage

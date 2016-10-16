@@ -15,7 +15,7 @@ LOG = logging.getLogger(__name__)
 
 def _parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('server', help='sft-testspeed server to connect')
+    parser.add_argument('server', help='sft-multiclient-server to connect')
     args = parser.parse_args()
 
     temp_server = args.server.split(':')

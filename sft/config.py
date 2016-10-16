@@ -4,7 +4,7 @@ from sft.utils.common import Singleton
 
 
 # Get path for config.
-folder_path = os.path.dirname('/usr/etc/sft/')
+folder_path = os.path.dirname('/usr/local/etc/sft/')
 CONFIG_PATH = os.path.join(folder_path, "sft.conf")
 CONFIG_SECTION = "Config"
 

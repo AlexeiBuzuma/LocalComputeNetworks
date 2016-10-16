@@ -1,6 +1,12 @@
 CHANGES
 =======
 
+* Multiclient now uses global config
+* Implemented multiclient server using select
+* WIP
+* WIP
+* Configuration file moved to appropriate place
+* WIP
 * Added basic functionality for session manager
 * Rename singleton.py to common.py
 * Move singleton to utils
