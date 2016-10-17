@@ -47,7 +47,7 @@ class Session:
         self.update_recv_time()
         self.update_sent_time()
         self.status = SessionStatus.active
-        self.uuid = uuid
+        self.client_uuid = uuid
 
     @property
     def last_recv_time(self):
@@ -66,10 +66,6 @@ class Session:
         if not isinstance(value, SessionStatus):
             raise AttributeError("Status should be an instance of 'SessionStatus' class.")
         self.__status = value
-
-    @property
-    def socket(self):
-        return self.__socket
 
     @property
     def command(self):
@@ -127,8 +123,6 @@ class SessionManager(metaclass=Singleton):
     def create_session(self, client_address):
         """
         Create session.
-        If uuid already exists in SessionManager storage, they will return this session, but with no reactivation
-
         Returns: session object
         """
 
@@ -163,8 +157,10 @@ class SessionManager(metaclass=Singleton):
         """ Set inactive status for session, if session exists.
         """
 
-        session = self.get_session_by_address(client_address)
-        session.status = SessionStatus.inactive
+        for session in self._sessions:
+            if session.client_address == client_address:
+                session.status = SessionStatus.inactive
+                return
 
     def get_all_active_sessions(self):
         """ Find and return sessions with active status.
@@ -184,22 +180,6 @@ class SessionManager(metaclass=Singleton):
         # Create session for this client, if session doesn't exist
         session = self.create_session(client_address)
         return session
-
-    # def get_socket_by_address(self, client_address):
-    #     """ Returns socket that bind with client address if successful else None.
-    #     """
-    #
-    #     for session in self.get_all_active_sessions():
-    #         if session.client_address == client_address:
-    #             return session.socket
-    #
-    #     return None
-
-    # def get_all_sockets(self):
-    #     """ Returns list of tuples with client address and socket.
-    #     """
-    #
-    #     return [(session.client_address, session.socket) for session in self.get_all_active_sessions()]
 
 
 if __name__ == '__main__':
