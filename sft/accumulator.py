@@ -19,7 +19,12 @@ class Accumulator:
         self._handlers = []
         self._data_accumulators = defaultdict(bytearray)
 
-    def accumulate_data(self, initiator, data):
+    def accumulate_data_chunk(self, initiator, data):
+        """
+        Accumulate data chunk.
+        :param initiator: Client address
+        :param data: data for accumulate
+        """
 
         self._data_accumulators[initiator] += data
         packet_size = _config.accumulator_packet_size
@@ -31,6 +36,15 @@ class Accumulator:
                 handler(initiator, packet)
 
             self._data_accumulators[initiator] = self._data_accumulators[initiator][packet_size:]
+
+    def accumulate_data(self, data):
+        """
+        Accumulate data.
+        :param data: [(cliend_addr, data), (client_addr, data) ... ]
+        """
+
+        for client_addr, data in data:
+            self.accumulate_data_chunk(client_addr, data)
 
     def add_handler(self, handler):
         """ Add event handler to accumulator.
@@ -66,33 +80,33 @@ if __name__ == '__main__':
     accumulator = Accumulator()
     accumulator.add_handler(handler)
 
-    accumulator.accumulate_data("Initiator1", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data("Initiator2", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data("Initiator3", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator1", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator2", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator3", os.urandom(int(packet_size * 0.66)))
 
     for acc in accumulator._data_accumulators:
         print("{} --> Len: {}".format(acc, len(accumulator._data_accumulators.get(acc))))
     print("----------------------------------------------------------------------------\n")
 
-    accumulator.accumulate_data("Initiator1", os.urandom(int(packet_size * 0.12)))
-    accumulator.accumulate_data("Initiator2", os.urandom(int(packet_size * 0.12)))
-    accumulator.accumulate_data("Initiator3", os.urandom(int(packet_size * 0.12)))
+    accumulator.accumulate_data_chunk("Initiator1", os.urandom(int(packet_size * 0.12)))
+    accumulator.accumulate_data_chunk("Initiator2", os.urandom(int(packet_size * 0.12)))
+    accumulator.accumulate_data_chunk("Initiator3", os.urandom(int(packet_size * 0.12)))
 
     for acc in accumulator._data_accumulators:
         print("{} --> Len: {}".format(acc, len(accumulator._data_accumulators.get(acc))))
     print("----------------------------------------------------------------------------\n")
 
-    accumulator.accumulate_data("Initiator3", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data("Initiator2", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data("Initiator1", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator3", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator2", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator1", os.urandom(int(packet_size * 0.66)))
 
     for acc in accumulator._data_accumulators:
         print("{}--> Len: {}".format(acc, len(accumulator._data_accumulators.get(acc))))
     print("----------------------------------------------------------------------------\n")
 
-    accumulator.accumulate_data("Initiator1", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data("Initiator2", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data("Initiator3", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator1", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator2", os.urandom(int(packet_size * 0.66)))
+    accumulator.accumulate_data_chunk("Initiator3", os.urandom(int(packet_size * 0.66)))
 
     for acc in accumulator._data_accumulators:
         print("{}--> Len: {}".format(acc, len(accumulator._data_accumulators.get(acc))))

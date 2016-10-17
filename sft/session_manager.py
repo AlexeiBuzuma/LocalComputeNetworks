@@ -2,6 +2,8 @@
 """
 
 # ToDo: Session Reactivation
+# ToDo TCP -> create_session when client physicaly connected
+# ToDo TCP -> activate_session when processing 'CONNECT' command
 
 from sft.utils.common import Singleton
 import time
@@ -25,21 +27,27 @@ class Session:
     """ Represent information about session.
     """
 
-    def __init__(self, client_address,  socket, client_uuid):
+    def __init__(self, client_address):
         """ Initialize session.
         """
 
         self.client_address = client_address
-        self.client_uuid = client_uuid
+        self.client_uuid = None
 
         # ToDo: It should create 'connect' command, not None
         self.__command = None
-        self.__socket = socket
 
         self.__last_recv_time = time.time()
         self.__last_sent_time = time.time()
 
         self.__status = SessionStatus.active
+
+    def activate_session(self, uuid):
+
+        self.update_recv_time()
+        self.update_sent_time()
+        self.status = SessionStatus.active
+        self.client_uuid = uuid
 
     @property
     def last_recv_time(self):
@@ -60,10 +68,6 @@ class Session:
         self.__status = value
 
     @property
-    def socket(self):
-        return self.__socket
-
-    @property
     def command(self):
         return self.__command
 
@@ -73,6 +77,12 @@ class Session:
         if not isinstance(value, object):
             raise AttributeError()
         self.__command = value
+
+    def call_command(self, data):
+        """
+        """
+
+        raise NotImplementedError()
 
     def update_recv_time(self):
         """ Update time from last receive packet.
@@ -110,25 +120,47 @@ class SessionManager(metaclass=Singleton):
 
         return None
 
-    def create_session(self, client_address, socket, uuid):
+    def create_session(self, client_address):
         """
         Create session.
-        If uuid already exists in SessionManager storage, they will return this session, but with no reactivation
-
         Returns: session object
         """
 
+        # ToDo: write into command field 'Connect' command
         # ToDo: It should only be called when processing 'connect' command.
         # ToDo: Session will be activate when executing the same command as the command in inactive session.
 
-        session = self._get_session_by_uuid(uuid)
-        if session:
-            session.status = SessionStatus.wait_for_activation
-            return session
-
-        session = Session(client_address, uuid, socket)
+        session = Session(client_address)
         self._sessions.append(session)
         return session
+
+    def activate_session(self, client_address, uuid):
+
+        # Try to find session by uuid
+        session = self._get_session_by_uuid(uuid)
+        if session:
+            session.activate_session(uuid)
+            return session
+
+        # Try to find session be client address
+        session = self.get_session_by_address(client_address)
+        if session:
+            session.activate_session(uuid)
+            return session
+
+        # Create new session, if client_addr and uuid not exists in storage
+        session = self.create_session(client_address)
+        session.activate_session()
+        return session
+
+    def deactivate_session_by_address(self, client_address):
+        """ Set inactive status for session, if session exists.
+        """
+
+        for session in self._sessions:
+            if session.client_address == client_address:
+                session.status = SessionStatus.inactive
+                return
 
     def get_all_active_sessions(self):
         """ Find and return sessions with active status.
@@ -137,31 +169,17 @@ class SessionManager(metaclass=Singleton):
         active_sessions = [session for session in self._sessions if session.status == SessionStatus.active]
         return active_sessions
 
-    def get_socket_by_address(self, client_address):
-        """ Returns socket that bind with client address if successful else None.
-        """
-
-        for session in self.get_all_active_sessions():
-            if session.client_address == client_address:
-                return session.socket
-
-        return None
-
     def get_session_by_address(self, client_address):
-        """ Returns session that bind with client address if successful else None.
+        """ Returns session that bind with client address.
         """
 
         for session in self.get_all_active_sessions():
             if session.client_address == client_address:
                 return session
 
-        return None
-
-    def get_all_sockets(self):
-        """ Returns list of tuples with client address and socket.
-        """
-
-        return [(session.client_address, session.socket) for session in self.get_all_active_sessions()]
+        # Create session for this client, if session doesn't exist
+        session = self.create_session(client_address)
+        return session
 
 
 if __name__ == '__main__':
@@ -171,15 +189,13 @@ if __name__ == '__main__':
     import mock
 
     client_addr = "client_addr"
-    dummy_socket = mock.MagicMock()
     dummy_uuid = mock.MagicMock()
 
     manager = SessionManager()
 
-    session = manager.create_session(client_addr, dummy_socket, dummy_uuid)
+    session = manager.create_session(client_addr)
     print(session)
     print(session.last_recv_time)
     print(session.last_sent_time)
 
-    assert manager.get_socket_by_address(client_addr) == session.socket
     assert manager.get_session_by_address(client_addr) == session
