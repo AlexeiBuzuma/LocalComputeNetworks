@@ -159,9 +159,8 @@ class SessionManager(metaclass=Singleton):
 
         session = self.get_session_by_address(client_addr, create_new=False)
 
-        # ToDo: Should we raise exception here?
-        # if session is None:
-        #     raise Exception("Session for client '{}' not found".format(client_addr))
+        if session is None:
+            raise Exception("Session for client '{}' not found".format(client_addr))
 
         session.status = SessionStatus.inactive
 
@@ -186,7 +185,6 @@ class SessionManager(metaclass=Singleton):
             session = self.create_session(client_address)
             return session
 
-        # ToDo: Should we raise exception here?
         return None
 
 
