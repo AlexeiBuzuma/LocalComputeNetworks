@@ -157,10 +157,13 @@ class SessionManager(metaclass=Singleton):
         """ Set inactive status for session, if session exists.
         """
 
-        for session in self._sessions:
-            if session.client_address == client_address:
-                session.status = SessionStatus.inactive
-                return
+        session = self.get_session_by_address(client_addr, create_new=False)
+
+        # ToDo: Should we raise exception here?
+        # if session is None:
+        #     raise Exception("Session for client '{}' not found".format(client_addr))
+
+        session.status = SessionStatus.inactive
 
     def get_all_active_sessions(self):
         """ Find and return sessions with active status.
@@ -169,8 +172,9 @@ class SessionManager(metaclass=Singleton):
         active_sessions = [session for session in self._sessions if session.status == SessionStatus.active]
         return active_sessions
 
-    def get_session_by_address(self, client_address):
+    def get_session_by_address(self, client_address, create_new=True):
         """ Returns session that bind with client address.
+        If session not exists new session object will created according to 'create_new' argument.
         """
 
         for session in self.get_all_active_sessions():
@@ -178,8 +182,12 @@ class SessionManager(metaclass=Singleton):
                 return session
 
         # Create session for this client, if session doesn't exist
-        session = self.create_session(client_address)
-        return session
+        if create_new:
+            session = self.create_session(client_address)
+            return session
+
+        # ToDo: Should we raise exception here?
+        return None
 
 
 if __name__ == '__main__':
