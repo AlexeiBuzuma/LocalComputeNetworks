@@ -1,7 +1,7 @@
 import logging
 
 from sft.server.steps.default import steps as _default_steps
-from sft.drivers.loader import DriverLoader
+from sft.drivers.loader import get_protocol_driver
 
 
 LOG = logging.getLogger(__name__)
@@ -11,7 +11,7 @@ class StepManager(object):
     def __init__(self):
         super().__init__()
         self._steps = _default_steps
-        driver_steps = DriverLoader.get_protocol_driver().get_server_steps()
+        driver_steps = get_protocol_driver().get_server_steps()
         self._steps.update(driver_steps)
 
         LOG.debug('Selection steps: %r', self.get_selection_steps())

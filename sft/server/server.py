@@ -2,7 +2,7 @@ import logging
 
 from sft.config import Config
 from sft.server.base import ServerBase
-from sft.drivers.loader import DriverLoader
+from sft.drivers.loader import load_protocol_driver
 from sft.server.steps.manager import StepManager
 
 
@@ -12,7 +12,7 @@ LOG = logging.getLogger(__name__)
 class SFTServer(ServerBase):
     def __init__(self, protocol='TCP', host=None):
         super().__init__()
-        DriverLoader.load(protocol)
+        load_protocol_driver(protocol)
         step_manager = StepManager()
         self._selection_steps = step_manager.get_selection_steps()
         self._reading_steps = step_manager.get_reading_steps()
