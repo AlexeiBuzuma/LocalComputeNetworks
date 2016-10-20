@@ -1,3 +1,8 @@
+"""Module ontains all server basic execution steps.
+   Each step in dict must be a tuple of callables.
+   Each step can be overloaded in driver steps dict.
+"""
+
 import logging
 
 

@@ -10,8 +10,5 @@ LOG = logging.getLogger(__name__)
 
 class UDPDriver(ProtocolDriverBase):
     """SFT UDP protocol driver."""
-    def __init__(self):
-        super().__init__()
-
     def get_server_steps(self):
         return deepcopy(steps)

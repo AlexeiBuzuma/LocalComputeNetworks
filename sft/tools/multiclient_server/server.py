@@ -26,7 +26,7 @@ def _parse_args():
     return args
 
 
-class SFTServer(object):
+class SFTServer():
     def __init__(self, port=None):
         super().__init__()
         self._conf = Config()
