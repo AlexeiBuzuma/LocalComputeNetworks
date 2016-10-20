@@ -15,14 +15,15 @@ def load_protocol_driver(protocol=None):
 
 @run_once
 def get_protocol_driver(protocol=None):
+    """Load appropriate protocol driver."""
     if protocol is None:
         try:
             protocol = Config().protocol
         except Exception as e:
             raise RuntimeError('Protocol not specified')
-    if protocol == 'TCP':
+    if protocol == 'tcp':
         return TCPDriver()
-    elif protocol == 'UDP':
+    elif protocol == 'udp':
         return UDPDriver()
     else:
         raise RuntimeError('Unknown protocol specified')

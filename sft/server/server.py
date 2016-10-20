@@ -10,7 +10,16 @@ LOG = logging.getLogger(__name__)
 
 
 class SFTServer(ServerBase):
-    def __init__(self, protocol='TCP', host=None):
+    """SFT Server class.
+
+       All server functionality is devided into 4 phases: socket selection,
+       data reading, data writing and state check. All phases consist of
+       execution steps which are influenced by active protocol driver.
+       All steps of a phase are executed one by one, execution result of the
+       previous step is given as an argument to the next step. Result of the
+       last step becomes the result of the whole phase.
+    """
+    def __init__(self, protocol='tcp', host=None):
         super().__init__()
         load_protocol_driver(protocol)
         step_manager = StepManager()

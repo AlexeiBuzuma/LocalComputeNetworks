@@ -7,7 +7,8 @@ from sft.config import Config
 LOG = logging.getLogger(__name__)
 
 
-class ServerBase(object, metaclass=abc.ABCMeta):
+class ServerBase(metaclass=abc.ABCMeta):
+    """Basic server functionality."""
     def __init__(self):
         super().__init__()
         self._conf = Config()
