@@ -5,6 +5,8 @@ from sft.server.base import ServerBase
 from sft.drivers.loader import load_protocol_driver
 from sft.server.steps.manager import StepManager
 
+import sft.server.commands.factory
+
 
 LOG = logging.getLogger(__name__)
 

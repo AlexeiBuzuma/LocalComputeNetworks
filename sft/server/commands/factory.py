@@ -1,6 +1,6 @@
 import logging
 
-
+from sft.server import commands
 
 
 LOG = logging.getLogger(__name__)

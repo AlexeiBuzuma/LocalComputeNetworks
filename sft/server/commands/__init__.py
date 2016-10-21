@@ -1,13 +1,26 @@
-from sft.utils.common import import_submodules
+import logging
+
+from sft.utils.common import import_submodules, run_once
 from sft.server.commands.base import CommandBase
 
-def import_commands():
-    submodules = import_submodules(__name__).keys()
+
+LOG = logging.getLogger(__name__)
+
+
+@run_once
+def load_commands():
+    commands = {}
+    submodules = import_submodules(__name__).values()
     for module in submodules:
-        for item in module.__all__:
-            if issubclass(item, CommandBase):
-                globals().
-    print(submodules)
+        try:
+            for attr_name in module.__all__:
+                attr = getattr(module, attr_name)
+                if issubclass(attr, CommandBase):
+                    commands[attr_name] = attr
+        except AttributeError as e:
+            pass
+    globals().update(commands)
+    LOG.debug('Loaded commands: %r', list(commands.keys()))
 
 
-import_commands()
+load_commands()
