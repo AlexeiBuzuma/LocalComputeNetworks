@@ -34,7 +34,7 @@ class SFTServer(ServerBase):
         self._execute_steps(self._writing_steps)
         self._execute_steps(self._state_check_steps)
 
-        from time import sleep; sleep(0.5)  # debug
+        from time import sleep; sleep(1)  # debug
 
     def _execute_steps(self, steps, initial_arg=None):
         result = initial_arg

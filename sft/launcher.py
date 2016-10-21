@@ -3,8 +3,6 @@ import logging
 import argparse
 import sys
 
-from sft.server import SFTServer
-
 
 def _parse_args():
     parser = argparse.ArgumentParser(
@@ -38,6 +36,7 @@ def main():
 
     try:
         LOG.info('Application started')
+        from sft.server import SFTServer  # don't move to the top!
         server = SFTServer(args.mode, args.host)
         server.run()
     except Exception as e:
