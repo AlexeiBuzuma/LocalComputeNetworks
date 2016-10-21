@@ -173,7 +173,7 @@ class SessionManager(metaclass=Singleton):
 
     def get_session_by_address(self, client_address, create_new=True):
         """ Returns session that bind with client address.
-        If session not exists new session object will created according to 'create_new' argument.
+        If session doesn't exist new session object will be created according to 'create_new' argument.
         """
 
         for session in self.get_all_active_sessions():

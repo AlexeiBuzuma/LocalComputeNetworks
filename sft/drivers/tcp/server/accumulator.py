@@ -16,98 +16,25 @@ class Accumulator:
         """ Initialize accumulator.
         """
 
-        self._handlers = []
         self._data_accumulators = defaultdict(bytearray)
-
-    def accumulate_data_chunk(self, initiator, data):
-        """
-        Accumulate data chunk.
-        :param initiator: Client address
-        :param data: data for accumulate
-        """
-
-        self._data_accumulators[initiator] += data
-        packet_size = _config.accumulator_packet_size
-
-        if len(self._data_accumulators[initiator]) >= packet_size:
-            packet = self._data_accumulators[initiator][:packet_size]
-
-            for handler in self._handlers:
-                handler(initiator, packet)
-
-            self._data_accumulators[initiator] = self._data_accumulators[initiator][packet_size:]
 
     def accumulate_data(self, data):
         """
         Accumulate data.
-        :param data: [(cliend_addr, data), (client_addr, data) ... ]
+        :param data: [(client_addr, raw_data), (client_addr, raw_data) ... ]
+        :return ready_packages: packages that are ready for processing
+                [(client_addr, pckt_payload), ... ]
         """
 
-        for client_addr, data in data:
-            self.accumulate_data_chunk(client_addr, data)
+        ready_packages = []
+        packet_size = _config.accumulator_packet_size
 
-    def add_handler(self, handler):
-        """ Add event handler to accumulator.
+        for client_addr, data_chunk in data:
+            self._data_accumulators[client_addr] += data_chunk
 
-        Handler will be called, when packet will be formatted.
-        In the handler will be sent info about client address and packet data.initiator
-        Info about packet will be removed after execution of the handlers
-        """
+            if len(self._data_accumulators[client_addr]) >= packet_size:
+                packet = self._data_accumulators[client_addr][:packet_size]
+                ready_packages.append((client_addr, packet))
+                self._data_accumulators[client_addr] = self._data_accumulators[client_addr][packet_size:]
 
-        if not callable(handler):
-            raise AttributeError("Handler mast be a callable object.")
-
-        if handler in self._handlers:
-            raise AttributeError("Handler {} already subscribed".format(repr(handler)))
-
-        self._handlers.append(handler)
-
-if __name__ == '__main__':
-    """ Example is using accumulator.
-    """
-
-    import os
-
-    def handler(initiator, data):
-        print("Process data from initiator: {}".format(initiator))
-        print("Data: {} ... {}".format(data[:10], data[-10:]))
-        print("------------------------------------------")
-
-
-    packet_size = _config.accumulator_packet_size
-    print("Packet size: {}\n\n".format(packet_size))
-
-    accumulator = Accumulator()
-    accumulator.add_handler(handler)
-
-    accumulator.accumulate_data_chunk("Initiator1", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data_chunk("Initiator2", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data_chunk("Initiator3", os.urandom(int(packet_size * 0.66)))
-
-    for acc in accumulator._data_accumulators:
-        print("{} --> Len: {}".format(acc, len(accumulator._data_accumulators.get(acc))))
-    print("----------------------------------------------------------------------------\n")
-
-    accumulator.accumulate_data_chunk("Initiator1", os.urandom(int(packet_size * 0.12)))
-    accumulator.accumulate_data_chunk("Initiator2", os.urandom(int(packet_size * 0.12)))
-    accumulator.accumulate_data_chunk("Initiator3", os.urandom(int(packet_size * 0.12)))
-
-    for acc in accumulator._data_accumulators:
-        print("{} --> Len: {}".format(acc, len(accumulator._data_accumulators.get(acc))))
-    print("----------------------------------------------------------------------------\n")
-
-    accumulator.accumulate_data_chunk("Initiator3", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data_chunk("Initiator2", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data_chunk("Initiator1", os.urandom(int(packet_size * 0.66)))
-
-    for acc in accumulator._data_accumulators:
-        print("{}--> Len: {}".format(acc, len(accumulator._data_accumulators.get(acc))))
-    print("----------------------------------------------------------------------------\n")
-
-    accumulator.accumulate_data_chunk("Initiator1", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data_chunk("Initiator2", os.urandom(int(packet_size * 0.66)))
-    accumulator.accumulate_data_chunk("Initiator3", os.urandom(int(packet_size * 0.66)))
-
-    for acc in accumulator._data_accumulators:
-        print("{}--> Len: {}".format(acc, len(accumulator._data_accumulators.get(acc))))
-    print("----------------------------------------------------------------------------\n")
+        return ready_packages

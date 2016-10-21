@@ -26,11 +26,18 @@ def raw_data_udp_reader(socket_list):
 
 class UDPNormalizer(DataNormalizer):
 
-    def __init__(self, quality_of_service):
+    def __init__(self):
         super().__init__()
-        self._quality_of_service = quality_of_service
+
+        # ToDo: Create QoS object
+        self._quality_of_service = object()
 
     def normalize(self, data):
+        """
+        :param data: [(client_addr, raw_data), (client_addr, raw_data) ... ]
+        :return: [(client_addr, pckt_payload), ... ]
+        """
+
         # ToDo: Should contains functionality for QoS.
 
         raise NotImplementedError()
@@ -40,7 +47,7 @@ class UDPNormalizer(DataNormalizer):
 
 steps = {
     'raw_data_reader': (raw_data_udp_reader, ),
-    'raw_data_normalizer': (lambda x: LOG.debug('udp_qos_step'), ),
+    'raw_data_normalizer': (UDPNormalizer().normalize, ),
 
     'packet_data_writer': (lambda x: LOG.debug('udp_data_writer_step'), ),
 

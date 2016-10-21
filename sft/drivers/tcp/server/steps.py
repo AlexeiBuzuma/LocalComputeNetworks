@@ -2,6 +2,7 @@ import logging
 from sft.config import Config
 from sft.server.sessions.session_manager import SessionManager
 from sft.server.steps.default import DataNormalizer
+from sft.drivers.tcp.server.accumulator import Accumulator
 
 
 LOG = logging.getLogger(__name__)
@@ -40,24 +41,27 @@ def raw_data_tcp_reader(socket_list):
 
 # ------------------ RawDataNormalizerStep ------------------
 
-# ToDo: How to set this step in the dict, if we need in initialized accumulator for create normalizer?
 class TCPNormalizer(DataNormalizer):
     """ Send all data into accumulator.
     """
 
-    def __init__(self, accumulator):
+    def __init__(self):
         super().__init__()
-        self._accumulator = accumulator
+        self._accumulator = Accumulator()
 
     def normalize(self, data):
-        self._accumulator.accumulate_data(data)
+        """
+        :param data: [(client_addr, raw_data), (client_addr, raw_data) ... ]
+        :return: [(client_addr, pckt_payload), ... ]
+        """
+        return self._accumulator.accumulate_data(data)
 
 # -----------------------------------------------------------
 
 
 steps = {
     'raw_data_reader': (raw_data_tcp_reader, ),
-    'raw_data_normalizer': (lambda x: LOG.debug('tcp_data_accumulating_step'), ),
+    'raw_data_normalizer': (TCPNormalizer().normalize, ),
 
     'packet_data_writer': (lambda x: LOG.debug('tcp_data_writer_step'), ),
 
