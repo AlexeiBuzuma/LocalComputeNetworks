@@ -3,6 +3,7 @@ from sft.config import Config
 from sft.server.sessions.session_manager import SessionManager
 from sft.server.steps.default import DataNormalizer
 from sft.drivers.tcp.server.accumulator import Accumulator
+from sft.server.server import sockets
 
 
 LOG = logging.getLogger(__name__)
@@ -19,20 +20,27 @@ def raw_data_tcp_reader(socket_list):
     :return: [(client_addr, data), (client_addr, data), ...]
     """
 
+    service_socket = sockets["service_socket"]
     buffer_size = _config.tcp_buffer_size
 
     raw_data = []
 
     for socket in socket_list:
-        data = socket.recv(buffer_size)
-        client_addr = socket.getpeername()
+        if socket == service_socket:
+            client_socket, client_addr = service_socket.accept()
+            socket[client_addr] = client_socket
+            _session_manager.create_session(client_addr)
+        else:
+            data = socket.recv(buffer_size)
+            client_addr = socket.getpeername()
 
-        if not data:
-            _session_manager.deactivate_session_by_address(client_addr)
-            # ToDo: Close socket in SocketContainer
-            continue
+            if not data:
+                _session_manager.deactivate_session_by_address(client_addr)
+                sockets[client_addr].close()
+                del sockets[client_addr]
+                continue
 
-        raw_data.append((client_addr, data))
+            raw_data.append((client_addr, data))
 
     return raw_data
 
