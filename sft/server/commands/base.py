@@ -5,14 +5,22 @@ import abc
 LOG = logging.getLogger(__name__)
 
 
+class CommandFinished(Exception):
+    pass
+
+
 class CommandBase(metaclass=abc.ABCMeta):
     """Base class for all sft commands."""
+    def __init__(self, first_packet_data):
+        self._initialize(first_packet_data)
+
     @abc.abstractmethod
-    def __init(self, first_packet_data):
+    def _initialize(self, first_packet_data):
         pass
 
-    @abc.abstractproperty
-    def command_id(self):
+    @staticmethod
+    @abc.abstractmethod
+    def get_command_id():
         pass
 
     @abc.abstractmethod

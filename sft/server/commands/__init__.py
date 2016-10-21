@@ -19,8 +19,9 @@ def load_commands():
                     commands[attr_name] = attr
         except AttributeError as e:
             pass
-    globals().update(commands)
-    LOG.debug('Loaded commands: %r', list(commands.keys()))
+    log_info = {commands[command].get_command_id(): command for command in commands}
+    LOG.debug('Loaded commands: %r', log_info)
+    return {command.get_command_id(): command for command in commands.values()}
 
 
 load_commands()
