@@ -19,6 +19,9 @@ class SFTServer(ServerBase):
        previous step is given as an argument to the next step. Result of the
        last step becomes the result of the whole phase.
     """
+
+    sockets = dict()
+
     def __init__(self, protocol='tcp', host=None):
         super().__init__()
         load_protocol_driver(protocol)
@@ -41,3 +44,5 @@ class SFTServer(ServerBase):
         for step in steps:
             result = step(result)
         return result
+
+sockets = SFTServer.sockets
