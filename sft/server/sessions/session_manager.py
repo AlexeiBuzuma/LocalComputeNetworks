@@ -2,12 +2,19 @@
 """
 
 # ToDo: Session Reactivation
-# ToDo TCP -> create_session when client physicaly connected
 # ToDo TCP -> activate_session when processing 'CONNECT' command
 
-from sft.utils.common import Singleton
 import time
 from enum import Enum
+
+from sft.utils.common import Singleton
+from sft.utils.packets import get_heartbit_payload
+from sft.server.commands.base import CommandBase, CommandFinished
+from sft.server.commands.factory import CommandFactory
+from sft.config import Config
+
+
+_conf = Config()
 
 
 class SessionStatus(Enum):
@@ -40,7 +47,7 @@ class Session:
         self.__last_recv_time = time.time()
         self.__last_sent_time = time.time()
 
-        self.__status = SessionStatus.active
+        self.__status = SessionStatus.wait_for_activation
 
     def activate_session(self, uuid):
 
@@ -73,16 +80,28 @@ class Session:
 
     @command.setter
     def command(self, value):
-        # ToDo: VALIDATION
-        if not isinstance(value, object):
+        if not issubclass(value, CommandBase):
             raise AttributeError()
         self.__command = value
 
-    def call_command(self, data):
-        """
-        """
+    def command_recieve_data(self, data):
+        if self.__command is None:
+            self.__command = CommandFactory().create_command(data)
+        else:
+            try:
+                self.__command.recieve_data(data)
+            except CommandFinished as e:
+                self.__command = None
 
-        raise NotImplementedError()
+    def command_generate_data(self):
+        data = None
+        if self.__command is not None:
+            data = self.__command.generate_data()
+        if data is None:
+            last_sent_interval = time.time() - self.__last_sent_time
+            if last_sent_interval > _conf.send_timeout:
+                data = get_heartbit_payload()
+        return data
 
     def update_recv_time(self):
         """ Update time from last receive packet.
@@ -186,22 +205,3 @@ class SessionManager(metaclass=Singleton):
             return session
 
         return None
-
-
-if __name__ == '__main__':
-    """ Example of using SessionManager.
-    """
-
-    import mock
-
-    client_addr = "client_addr"
-    dummy_uuid = mock.MagicMock()
-
-    manager = SessionManager()
-
-    session = manager.create_session(client_addr)
-    print(session)
-    print(session.last_recv_time)
-    print(session.last_sent_time)
-
-    assert manager.get_session_by_address(client_addr) == session

@@ -8,6 +8,7 @@ import logging
 from sft.server.sessions.session_manager import SessionManager
 from sft.utils.packets import get_command_id
 from sft.server.commands.base import CommandIds
+from sft.server.steps.dispatcher import packet_dispatcher_step
 
 
 LOG = logging.getLogger(__name__)
@@ -70,7 +71,6 @@ def heartbit_filter(data):
 # ----------------------------------------------------------
 
 
-
 steps = {
     'socket_selector': (lambda x: LOG.debug('socket_selection_step'), ),
     'raw_data_reader': (lambda x: LOG.debug('raw_data_reader_step'), ),
@@ -78,14 +78,12 @@ steps = {
     'lastrecv_timestamp_updater': (recv_timestamp_updater, ),
     'raw_data_normalizer': (lambda x: LOG.debug('raw_data_normalizer_step'), ),
     'heartbit_reciever': (heartbit_filter, ),
-    'packet_dispatcher': (lambda x: LOG.debug('packet_dispatcher_step'), ),
+    'packet_dispatcher': (packet_dispatcher_step, ),
 
     'packet_payload_collector': (lambda x: LOG.debug('packet_payload_collector_step'), ),
-    'heartbit_sender': (lambda x: LOG.debug('heartbit_sender_step'), ),
+    'heartbit_sender': (lambda x: [], ),
     'lastsent_timestamp_updater': (sent_timestamp_updater, ),
     'packet_data_writer': (lambda x: LOG.debug('packet_data_writer_step'), ),
 
     'server_state_check': (lambda x: LOG.debug('server_state_check_step'), ),
 }
-
-

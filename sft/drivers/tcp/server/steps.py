@@ -3,6 +3,7 @@ from sft.config import Config
 from sft.server.sessions.session_manager import SessionManager
 from sft.server.steps.default import DataNormalizer
 from sft.drivers.tcp.server.accumulator import Accumulator
+# Cyclic dependency!
 from sft.server.server import sockets
 
 
