@@ -1,6 +1,16 @@
 import logging
 import abc
+from enum import Enum
 
+
+class CommandIds(Enum):
+    CONNECT_COMMAND_ID = 1
+    CLOSE_COMMAND_ID = 2
+    HEARTBIT_COMMAND_ID = 3
+    TIME_COMMAND_ID = 4
+    ECHO_COMMAND_ID = 5
+    DOWNLOAD_COMMAND_ID = 6
+    UPLOAD_COMMAND_ID = 7
 
 LOG = logging.getLogger(__name__)
 
