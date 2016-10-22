@@ -7,7 +7,7 @@ import abc
 import logging
 from sft.server.sessions.session_manager import SessionManager
 from sft.utils.packets import get_command_id
-from sft.server.commands.base import HEARTBIT_COMMAND_ID
+from sft.server.commands.base import CommandIds
 
 
 LOG = logging.getLogger(__name__)
@@ -61,11 +61,11 @@ class DataNormalizer(metaclass=abc.ABCMeta):
 def heartbit_filter(data):
     """
     Filter Heartbit packages from data flow.
-    :param data:
-    :return:
+    :param data: [(client_addr, pckt_payload), ... ]
+    :return: [(client_addr, pckt_payload), ... ]
     """
     LOG.debug('Heartbit Receiver Step')
-    return list(filter(lambda x: get_command_id(x[1]) != HEARTBIT_COMMAND_ID, data))
+    return list(filter(lambda x: get_command_id(x[1]) != CommandIds.HEARTBIT_COMMAND_ID.value, data))
 
 # ----------------------------------------------------------
 
