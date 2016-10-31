@@ -1,6 +1,6 @@
 import logging
 
-from sft.server.commands.base import CommandBase, CommandFinished
+from sft.server.commands.base import CommandBase, CommandFinished, CommandIds
 
 
 LOG = logging.getLogger(__name__)
@@ -12,7 +12,7 @@ class SampleCommand(CommandBase):
     """Command implementation example."""
     @staticmethod
     def get_command_id():
-        return 96
+        return CommandIds.SAMPLE_COMMAND_ID
 
     def _initialize(self, first_packet_data):
         LOG.debug('SampleCommand instance created. '

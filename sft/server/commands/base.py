@@ -3,6 +3,9 @@ import abc
 from enum import Enum
 
 
+LOG = logging.getLogger(__name__)
+
+
 class CommandIds(Enum):
     CONNECT_COMMAND_ID = 1
     CLOSE_COMMAND_ID = 2
@@ -11,8 +14,7 @@ class CommandIds(Enum):
     ECHO_COMMAND_ID = 5
     DOWNLOAD_COMMAND_ID = 6
     UPLOAD_COMMAND_ID = 7
-
-LOG = logging.getLogger(__name__)
+    SAMPLE_COMMAND_ID = 99
 
 
 class CommandFinished(Exception):

@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+* Server execution steps are now decomposited
+* Added dispatcher step + changes in Session
+* Minor fixes
+* Added HeartbitReceiver step
 * Added socket container
 * Modified Accumulator
 * Minor changes for TCP and UDP steps

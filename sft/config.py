@@ -37,7 +37,7 @@ class Config(metaclass=Singleton):
             "udp_buffer_size",
             "accumulator_packet_size",
             "send_timeout",
-            "send_timeout",
+            "receive_timeout",
         ]
         space_separated_list_fields = []
 

@@ -3,7 +3,7 @@ import logging
 from sft.config import Config
 from sft.server.base import ServerBase
 from sft.drivers.loader import load_protocol_driver
-from sft.server.steps.manager import StepManager
+from sft.server.steps import StepManager
 
 
 LOG = logging.getLogger(__name__)

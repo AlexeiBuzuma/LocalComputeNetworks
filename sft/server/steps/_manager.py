@@ -1,6 +1,6 @@
 import logging
 
-from sft.server.steps.default import steps as _default_steps
+from sft.server.steps import steps as _default_steps
 from sft.drivers.loader import get_protocol_driver
 
 
@@ -34,7 +34,7 @@ class StepManager():
             self._steps['packet_dispatcher']
 
     def get_writing_steps(self):
-        return self._steps['packet_payload_collector'] +\
+        return self._steps['payload_collector'] +\
             self._steps['heartbit_sender'] +\
             self._steps['lastsent_timestamp_updater'] +\
             self._steps['packet_data_writer']
