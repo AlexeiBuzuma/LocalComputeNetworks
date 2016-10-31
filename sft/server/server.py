@@ -3,7 +3,7 @@ import logging
 from sft.config import Config
 from sft.server.base import ServerBase
 from sft.drivers.loader import load_protocol_driver
-from sft.server.steps.manager import StepManager
+from sft.server.steps import StepManager
 
 
 LOG = logging.getLogger(__name__)
@@ -31,10 +31,12 @@ class SFTServer(ServerBase):
         self._writing_steps = step_manager.get_writing_steps()
         self._state_check_steps = step_manager.get_state_check_steps()
 
+        self.sockets['service_socket'] = None  # Delete this!
+
     def _main_loop(self):
         self._execute_steps(self._selection_steps)
-        self._execute_steps(self._reading_steps)
-        self._execute_steps(self._writing_steps)
+        self._execute_steps(self._reading_steps, ())
+        self._execute_steps(self._writing_steps, ())
         self._execute_steps(self._state_check_steps)
 
         from time import sleep; sleep(1)  # debug

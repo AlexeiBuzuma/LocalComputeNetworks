@@ -1,6 +1,24 @@
 CHANGES
 =======
 
+* Server execution steps are now decomposited
+* Added dispatcher step + changes in Session
+* Minor fixes
+* Added HeartbitReceiver step
+* Added socket container
+* Modified Accumulator
+* Minor changes for TCP and UDP steps
+* Added raising Exception in deactivate_session_by_address
+* Added RawDataReaderStep, TimestampUpdaterStep and RawDataNormalizerStep
+* Implemented command base and command factory
+* Added automatic import aof all commands when importing sft.server.commands
+* Started implementing command base
+* Minor improvements
+* Improved protocol driver loader
+* Added server and drivers sceletons
+* Added changes according to code review
+* Modified accumulator and SessionManager
+* Added basic functionality for socket container
 * Multiclient now uses global config
 * Implemented multiclient server using select
 * WIP

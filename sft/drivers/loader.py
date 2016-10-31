@@ -2,8 +2,6 @@ import logging
 
 from sft.config import Config
 from sft.utils.common import run_once
-from sft.drivers.tcp import TCPDriver
-from sft.drivers.udp import UDPDriver
 
 
 LOG = logging.getLogger(__name__)
@@ -22,8 +20,10 @@ def get_protocol_driver(protocol=None):
         except Exception as e:
             raise RuntimeError('Protocol not specified')
     if protocol == 'tcp':
+        from sft.drivers.tcp import TCPDriver  # don't move to the top!
         return TCPDriver()
     elif protocol == 'udp':
+        from sft.drivers.udp import UDPDriver  # don't move to the top!
         return UDPDriver()
     else:
         raise RuntimeError('Unknown protocol specified')

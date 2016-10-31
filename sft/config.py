@@ -20,6 +20,8 @@ class Config(metaclass=Singleton):
         self.tcp_buffer_size = None
         self.udp_buffer_size = None
         self.accumulator_packet_size = None
+        self.send_timeout = None
+        self.receive_timeout = None
 
         self.config = configparser.ConfigParser()
         self.config.read(CONFIG_PATH)
@@ -34,6 +36,8 @@ class Config(metaclass=Singleton):
             "tcp_buffer_size",
             "udp_buffer_size",
             "accumulator_packet_size",
+            "send_timeout",
+            "receive_timeout",
         ]
         space_separated_list_fields = []
 
