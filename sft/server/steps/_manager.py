@@ -7,7 +7,7 @@ from sft.drivers.loader import get_protocol_driver
 LOG = logging.getLogger(__name__)
 
 
-class StepManager():
+class StepManager:
     """Provides execution steps for each of server execution phases.
 
        Steps can differ based on driver loaded.

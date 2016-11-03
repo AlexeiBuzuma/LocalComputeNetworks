@@ -1,9 +1,11 @@
 import logging
+import socket
 
 from sft.config import Config
 from sft.server.base import ServerBase
 from sft.drivers.loader import load_protocol_driver
 from sft.server.steps import StepManager
+from port_for import select_random as get_random_port
 
 
 LOG = logging.getLogger(__name__)
@@ -31,12 +33,16 @@ class SFTServer(ServerBase):
         self._writing_steps = step_manager.get_writing_steps()
         self._state_check_steps = step_manager.get_state_check_steps()
 
-        self.sockets['service_socket'] = None  # Delete this!
+        # ToDo: get port from config ot command line args
+        self.sockets['service_socket'] = self._create_socket_on_port(port=33333)
+        self.sockets['service_socket'].listen(10)
 
     def _main_loop(self):
-        self._execute_steps(self._selection_steps)
-        self._execute_steps(self._reading_steps, ())
-        self._execute_steps(self._writing_steps, ())
+        selection_step_args = (self.sockets['service_socket'], list(self.sockets.values()))
+        readable, writable, exceptional = self._execute_steps(self._selection_steps, selection_step_args)
+
+        self._execute_steps(self._reading_steps, (self.sockets['service_socket'], readable))
+        self._execute_steps(self._writing_steps, (self.sockets['service_socket'], writable))
         self._execute_steps(self._state_check_steps)
 
         from time import sleep; sleep(1)  # debug
@@ -46,5 +52,21 @@ class SFTServer(ServerBase):
         for step in steps:
             result = step(result)
         return result
+
+    @staticmethod
+    def _create_socket_on_port(port=None, hostname='localhost'):
+        sock = socket.socket()
+        if port is None:
+            while True:
+                try:
+                    port = get_random_port()
+                    sock.bind((hostname, port))
+                except Exception as e:
+                    pass
+                else:
+                    break
+        else:
+            sock.bind((hostname, port))
+        return sock
 
 sockets = SFTServer.sockets

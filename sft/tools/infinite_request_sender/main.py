@@ -11,7 +11,7 @@ def _get_arguments():
     parser.add_argument("-m", dest="mode", help="TCP or UDP mode", choices=["tcp", "udp"], required=True)
     parser.add_argument("-s", dest="server", help="Run script in server mode", action="store_true")
     parser.add_argument("-c", dest="client", help="Run script in client mode", action="store_true")
-    parser.add_argument("-p", dest="port", help="Port for connect", default=9999)
+    parser.add_argument("-p", dest="port", help="Port for connect", default=9999, type=int)
     parser.add_argument("--ip", dest="ip", help="Server ip.")
     parser.add_argument("-d", dest="debug", help="Printing debug message.", action="store_true", default=True)
 
