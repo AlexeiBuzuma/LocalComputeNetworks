@@ -18,16 +18,16 @@ def raw_data_reader(socket_list):
        :return: [(client_addr, data), (client_addr, data), ...]
     """
     LOG.debug('tcp raw_data_reader step')
-
-    service_socket = sockets["service_socket"]
+    LOG.debug("socket_list: {}".format(socket_list))
+    service_socket, data_socket = socket_list
     buffer_size = _config.tcp_buffer_size
 
     raw_data = []
 
-    for socket in socket_list:
+    for socket in data_socket:
         if socket == service_socket:
             client_socket, client_addr = service_socket.accept()
-            socket[client_addr] = client_socket
+            sockets[client_addr] = client_socket
             _session_manager.create_session(client_addr)
         else:
             data = socket.recv(buffer_size)

@@ -5,6 +5,7 @@
 
 import logging
 
+from sft.server.steps.socket_selector import socket_selector
 from sft.server.steps.lastrecv_updater import lastrecv_timestamp_updater
 from sft.server.steps.raw_data_normalizer import raw_data_normalizer
 from sft.server.steps.heartbit_reciever import heartbit_reciever
@@ -19,7 +20,7 @@ LOG = logging.getLogger(__name__)
 
 
 steps = {
-    'socket_selector': (lambda x: LOG.debug('std socket_selection step'), ),
+    'socket_selector': (socket_selector, ),
 
     'raw_data_reader': (lambda x: LOG.debug('std raw_data_reader step'), ),
     'lastrecv_timestamp_updater': (lastrecv_timestamp_updater, ),
