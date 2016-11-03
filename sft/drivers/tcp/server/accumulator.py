@@ -3,7 +3,7 @@ This module contains implementation of functionality for accumulating data and
 data encapsulation in packets with fixed size.
 """
 
-from sft.config import Config
+from sft.common.config import Config
 from collections import defaultdict
 
 

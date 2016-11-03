@@ -1,7 +1,7 @@
 import logging
 
 from sft.utils.packets import get_command_id
-from sft.server.commands.base import CommandIds
+from sft.common.commands.base import CommandIds
 
 
 LOG = logging.getLogger(__name__)

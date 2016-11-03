@@ -1,10 +1,10 @@
 import logging
 import socket
 
-from sft.config import Config
+from sft.common.config import Config
 from sft.server.base import ServerBase
 from sft.drivers.loader import load_protocol_driver
-from sft.server.steps import StepManager
+from sft.common.steps import StepManager
 from port_for import select_random as get_random_port
 
 

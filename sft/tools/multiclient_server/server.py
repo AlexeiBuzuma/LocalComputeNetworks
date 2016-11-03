@@ -9,7 +9,7 @@ import select
 
 from port_for import select_random as get_random_port
 from sft.utils.collections import SockCollection
-from sft.config import Config
+from sft.common.config import Config
 
 
 logging.basicConfig(

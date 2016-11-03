@@ -5,15 +5,15 @@
 
 import logging
 
-from sft.server.steps.socket_selector import socket_selector
-from sft.server.steps.lastrecv_updater import lastrecv_timestamp_updater
-from sft.server.steps.raw_data_normalizer import raw_data_normalizer
-from sft.server.steps.heartbit_reciever import heartbit_reciever
-from sft.server.steps.packet_dispatcher import packet_dispatcher
+from sft.common.steps.socket_selector import socket_selector
+from sft.common.steps.lastrecv_updater import lastrecv_timestamp_updater
+from sft.common.steps.raw_data_normalizer import raw_data_normalizer
+from sft.common.steps.heartbit_reciever import heartbit_reciever
+from sft.common.steps.packet_dispatcher import packet_dispatcher
 
-from sft.server.steps.payload_collector import payload_collector
-from sft.server.steps.heartbit_sender import heartbit_sender
-from sft.server.steps.lastsent_updater import lastsent_timestamp_updater
+from sft.common.steps.payload_collector import payload_collector
+from sft.common.steps.heartbit_sender import heartbit_sender
+from sft.common.steps.lastsent_updater import lastsent_timestamp_updater
 
 
 LOG = logging.getLogger(__name__)

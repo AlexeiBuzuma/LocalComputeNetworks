@@ -1,6 +1,6 @@
 import logging
 
-from sft.server.steps.raw_data_normalizer import DataNormalizerBase
+from sft.common.steps.raw_data_normalizer import DataNormalizerBase
 from sft.drivers.tcp.server.accumulator import Accumulator
 
 

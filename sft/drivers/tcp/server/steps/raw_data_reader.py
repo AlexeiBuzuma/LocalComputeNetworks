@@ -1,7 +1,7 @@
 import logging
-from sft.config import Config
+from sft.common.config import Config
 
-from sft.server.sessions.session_manager import SessionManager
+from sft.common.sessions.session_manager import SessionManager
 from sft.server.server import sockets
 
 

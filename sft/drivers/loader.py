@@ -1,6 +1,6 @@
 import logging
 
-from sft.config import Config
+from sft.common.config import Config
 from sft.utils.common import run_once
 
 

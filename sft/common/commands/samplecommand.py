@@ -1,6 +1,6 @@
 import logging
 
-from sft.server.commands.base import CommandBase, CommandFinished, CommandIds
+from sft.common.commands.base import CommandBase, CommandFinished, CommandIds
 
 
 LOG = logging.getLogger(__name__)

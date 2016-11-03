@@ -1,6 +1,6 @@
 import logging
 
-from sft.server.sessions.session_manager import SessionManager
+from sft.common.sessions.session_manager import SessionManager
 
 
 LOG = logging.getLogger(__name__)

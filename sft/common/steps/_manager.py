@@ -1,6 +1,6 @@
 import logging
 
-from sft.server.steps import steps as _default_steps
+from sft.common.steps import steps as _default_steps
 from sft.drivers.loader import get_protocol_driver
 
 
@@ -12,6 +12,8 @@ class StepManager:
 
        Steps can differ based on driver loaded.
     """
+    # ToDo: Add server/client steps differentiation
+
     def __init__(self):
         super().__init__()
         self._steps = _default_steps

@@ -1,7 +1,7 @@
 import logging
 import abc
 
-from sft.config import Config
+from sft.common.config import Config
 
 
 LOG = logging.getLogger(__name__)

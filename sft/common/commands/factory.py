@@ -2,13 +2,14 @@ import logging
 
 from sft.utils.common import Singleton
 from sft.utils.packets import get_command_id
-from sft.server.commands import load_commands
+from sft.common.commands import load_commands
 
 
 LOG = logging.getLogger(__name__)
 
 
 class CommandFactory(metaclass=Singleton):
+    # ToDo: add __init__ argument for commands
     def __init__(self):
         super().__init__()
         self._commands_by_id = load_commands()

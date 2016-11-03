@@ -9,9 +9,9 @@ from enum import Enum
 
 from sft.utils.common import Singleton
 from sft.utils.packets import get_heartbit_payload
-from sft.server.commands.base import CommandBase, CommandFinished
-from sft.server.commands.factory import CommandFactory
-from sft.config import Config
+from sft.common.commands.base import CommandBase, CommandFinished
+from sft.common.commands.factory import CommandFactory
+from sft.common.config import Config
 
 
 _conf = Config()
