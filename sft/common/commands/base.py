@@ -23,7 +23,7 @@ class CommandFinished(Exception):
 
 class CommandBase(metaclass=abc.ABCMeta):
     """Base class for all sft commands."""
-    def __init__(self, first_packet_data):
+    def __init__(self, first_packet_data=None, is_crashed=False):
         self._initialize(first_packet_data)
 
     @abc.abstractmethod

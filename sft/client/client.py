@@ -2,7 +2,7 @@ import logging
 import socket
 
 from sft.common.config import Config
-from sft.server.base import ServerBase
+from sft.client.base import ClientBase
 from sft.drivers.loader import load_protocol_driver
 from sft.common.steps import StepManager
 from port_for import select_random as get_random_port
@@ -11,16 +11,8 @@ from port_for import select_random as get_random_port
 LOG = logging.getLogger(__name__)
 
 
-class SFTServer(ServerBase):
-    """SFT Server class.
-
-       All server functionality is devided into 4 phases: socket selection,
-       data reading, data writing and state check. All phases consist of
-       execution steps which are influenced by active protocol driver.
-       All steps of a phase are executed one by one, execution result of the
-       previous step is given as an argument to the next step. Result of the
-       last step becomes the result of the whole phase.
-    """
+class SFTClient(ClientBase):
+    """Write me!!!"""
 
     sockets = dict()
 
@@ -70,4 +62,4 @@ class SFTServer(ServerBase):
             sock.bind((hostname, port))
         return sock
 
-sockets = SFTServer.sockets
+sockets = SFTClient.sockets
