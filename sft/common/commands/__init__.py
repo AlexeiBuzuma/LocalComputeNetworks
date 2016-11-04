@@ -1,7 +1,7 @@
 import logging
 
-from sft.utils.common import import_submodules, run_once
 from sft.common.commands.base import CommandBase
+from sft.common.utils.common import import_submodules, run_once
 
 
 LOG = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
-from server import run_tcp_server, run_udp_server
-from client import run_tcp_client, run_udp_client
+from sft_tools.infinite_request_sender.server import run_tcp_server, run_udp_server
+from sft_tools.infinite_request_sender.client import run_tcp_client, run_udp_client
 
 
 def _get_arguments():

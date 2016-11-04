@@ -1,8 +1,8 @@
-import os
 import configparser
-from sft.utils.common import Singleton
-from sft.constants import APP_DATA_DIR
+import os
 
+from sft.common.utils.common import Singleton
+from sft.constants import APP_DATA_DIR
 
 # Get path for config.
 CONFIG_PATH = os.path.join(APP_DATA_DIR, "sft.conf")

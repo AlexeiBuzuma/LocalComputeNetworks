@@ -1,8 +1,8 @@
 import logging
 
-from sft.utils.common import Singleton
-from sft.utils.packets import get_command_id
 from sft.common.commands import load_commands  # delete me!!!
+from sft.common.utils.common import Singleton
+from sft.common.utils.packets import get_command_id
 
 
 LOG = logging.getLogger(__name__)
