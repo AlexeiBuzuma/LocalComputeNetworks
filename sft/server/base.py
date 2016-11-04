@@ -16,7 +16,7 @@ class ServerBase(metaclass=abc.ABCMeta):
     def run(self):
         self._initialize()
         try:
-            LOG.info('Server started')
+            LOG.debug('Server loop started')
             while True:
                 self._main_loop()
         except KeyboardInterrupt as e:
@@ -25,11 +25,11 @@ class ServerBase(metaclass=abc.ABCMeta):
             self._terminate()
 
     def _initialize(self):
-        LOG.info('Initializing server')
+        LOG.debug('Initializing server')
 
     @abc.abstractmethod
     def _main_loop(self):
         pass
 
     def _terminate(self):
-        LOG.info('Terminating server')
+        LOG.debug('Terminating server')

@@ -18,7 +18,7 @@ class SampleCommand(CommandBase):
         LOG.debug('SampleCommand instance created. '
                   'First packet: %r', first_packet_data)
 
-    def recieve_data(self, data):
+    def receive_data(self, data):
         raise CommandFinished
 
     def generate_data(self):
