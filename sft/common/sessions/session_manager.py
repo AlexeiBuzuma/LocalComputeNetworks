@@ -95,7 +95,7 @@ class Session:
             data = self.__command.generate_data()
         if data is None:
             last_sent_interval = time.time() - self.__last_sent_time
-            if last_sent_interval > _conf.send_timeout:
+            if last_sent_interval > _conf.heartbeat_sender_interval:
                 data = get_heartbeat_payload()
         return data
 

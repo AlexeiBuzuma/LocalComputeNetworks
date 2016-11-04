@@ -58,7 +58,6 @@ class StepManager:
 
     def get_writing_steps(self):
         return self._steps['payload_collector'] +\
-            self._steps['heartbeat_sender'] +\
             self._steps['lastsent_timestamp_updater'] +\
             self._steps['packet_data_writer']
 

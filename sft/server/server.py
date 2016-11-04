@@ -51,7 +51,7 @@ class SFTServer(ServerBase):
         readable, writable, exceptional = self._execute_steps(self._selection_steps, selection_step_args)
 
         self._execute_steps(self._reading_steps, (self.sockets['service_socket'], readable))
-        self._execute_steps(self._writing_steps, (self.sockets['service_socket'], writable))
+        self._execute_steps(self._writing_steps, writable)
         self._execute_steps(self._state_check_steps)
 
         from time import sleep; sleep(1)  # debug

@@ -12,7 +12,6 @@ from sft.common.steps.heartbeat_receiver import heartbeat_receiver
 from sft.common.steps.packet_dispatcher import packet_dispatcher
 
 from sft.common.steps.payload_collector import payload_collector
-from sft.common.steps.heartbeat_sender import heartbeat_sender
 from sft.common.steps.lastsent_updater import lastsent_timestamp_updater
 
 
@@ -29,7 +28,6 @@ steps = {
     'packet_dispatcher': (packet_dispatcher, ),
 
     'payload_collector': (payload_collector, ),
-    'heartbeat_sender': (heartbeat_sender, ),
     'lastsent_timestamp_updater': (lastsent_timestamp_updater, ),
     'packet_data_writer': (lambda x: LOG.debug('std packet_data_writer step'), ),
 
