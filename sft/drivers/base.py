@@ -10,3 +10,7 @@ class ProtocolDriverBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_server_steps(self):
         pass
+
+    @abc.abstractmethod
+    def get_client_steps(self):
+        pass

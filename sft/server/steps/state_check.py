@@ -8,9 +8,11 @@ LOG = logging.getLogger(__name__)
 _config = Config()
 
 
-def state_check():
+def server_state_check(data):
     """ Check last receive time in all active sessions. If time is expired, session will be deactivated.
     """
+
+    LOG.debug("Server state check")
 
     session_manager = SessionManager()
     active_sessions = session_manager.get_all_active_sessions()
