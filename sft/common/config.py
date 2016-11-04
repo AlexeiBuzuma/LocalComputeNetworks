@@ -1,11 +1,11 @@
 import os
 import configparser
 from sft.utils.common import Singleton
+from sft.constants import APP_DATA_DIR
 
 
 # Get path for config.
-folder_path = os.path.dirname('/usr/local/etc/sft/')
-CONFIG_PATH = os.path.join(folder_path, "sft.conf")
+CONFIG_PATH = os.path.join(APP_DATA_DIR, "sft.conf")
 CONFIG_SECTION = "Config"
 
 

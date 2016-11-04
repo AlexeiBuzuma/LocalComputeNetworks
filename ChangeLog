@@ -1,6 +1,9 @@
 CHANGES
 =======
 
+* Server-Client common part is now separated
+* Moved socket selector step to globel section
+* Added socket_Selection step
 * Server execution steps are now decomposited
 * Added dispatcher step + changes in Session
 * Minor fixes
