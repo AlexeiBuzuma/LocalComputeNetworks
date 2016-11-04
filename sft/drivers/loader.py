@@ -1,7 +1,7 @@
 import logging
 
 from sft.common.config import Config
-from sft.utils.common import run_once
+from sft.common.utils.common import run_once
 
 
 LOG = logging.getLogger(__name__)

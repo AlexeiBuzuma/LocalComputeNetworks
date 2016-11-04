@@ -7,12 +7,11 @@
 import time
 from enum import Enum
 
-from sft.utils.common import Singleton
-from sft.utils.packets import get_heartbit_payload
 from sft.common.commands.base import CommandBase, CommandFinished
 from sft.common.commands.factory import CommandFactory
 from sft.common.config import Config
-
+from sft.common.utils.common import Singleton
+from sft.common.utils.packets import get_heartbeat_payload
 
 _conf = Config()
 
@@ -20,9 +19,9 @@ _conf = Config()
 class SessionStatus(Enum):
     """ Describes session status.
 
-     active              -- fully active session
-     inactive            -- fully inactive session, not need in processing, just saving the session state
-     wait_for_activation -- state when session reactivate with 'connect' command, but no command executed yet
+        active              -- fully active session
+        inactive            -- fully inactive session, not need in processing, just saving the session state
+        wait_for_activation -- state when session reactivate with 'connect' command, but no command executed yet
     """
 
     active = 0
@@ -31,12 +30,10 @@ class SessionStatus(Enum):
 
 
 class Session:
-    """ Represent information about session.
-    """
+    """Represent information about session."""
 
     def __init__(self, client_address):
-        """ Initialize session.
-        """
+        """Initialize session."""
 
         self.client_address = client_address
         self.client_uuid = None
@@ -100,18 +97,16 @@ class Session:
         if data is None:
             last_sent_interval = time.time() - self.__last_sent_time
             if last_sent_interval > _conf.send_timeout:
-                data = get_heartbit_payload()
+                data = get_heartbeat_payload()
         return data
 
     def update_recv_time(self):
-        """ Update time from last receive packet.
-        """
+        """Update time from last receive packet."""
 
         self.__last_recv_time = time.time()
 
     def update_sent_time(self):
-        """ Update time from last sent packet.
-        """
+        """Update time from last sent packet."""
 
         self.__last_sent_time = time.time()
 
@@ -120,18 +115,15 @@ class Session:
 
 
 class SessionManager(metaclass=Singleton):
-    """ Functionality for managing sessions.
-    """
+    """Functionality for managing sessions."""
 
     def __init__(self):
-        """ Initialize SessionManager.
-        """
+        """Initialize SessionManager."""
 
         self._sessions = []
 
     def _get_session_by_uuid(self, client_uuid):
-        """ Return session object if successful, else None.
-        """
+        """Return session object if successful, else None."""
 
         for session in self._sessions:
             if session.client_uuid == client_uuid:
@@ -140,9 +132,9 @@ class SessionManager(metaclass=Singleton):
         return None
 
     def create_session(self, client_address):
-        """
-        Create session.
-        Returns: session object
+        """Create session.
+
+           Returns: session object
         """
 
         # ToDo: write into command field 'Connect' command
@@ -173,26 +165,26 @@ class SessionManager(metaclass=Singleton):
         return session
 
     def deactivate_session_by_address(self, client_address):
-        """ Set inactive status for session, if session exists.
-        """
+        """Set inactive status for session, if session exists."""
 
-        session = self.get_session_by_address(client_addr, create_new=False)
+        session = self.get_session_by_address(client_address, create_new=False)
 
         if session is None:
-            raise Exception("Session for client '{}' not found".format(client_addr))
+            raise Exception("Session for client '{}' not found".format(client_address))
 
         session.status = SessionStatus.inactive
 
     def get_all_active_sessions(self):
-        """ Find and return sessions with active status.
-        """
+        """Find and return sessions with active status."""
 
         active_sessions = [session for session in self._sessions if session.status == SessionStatus.active]
         return active_sessions
 
     def get_session_by_address(self, client_address, create_new=True):
-        """ Returns session that bind with client address.
-        If session doesn't exist new session object will be created according to 'create_new' argument.
+        """Returns session that bind with client address.
+
+           If session doesn't exist new session object will be created
+           according to 'create_new' argument.
         """
 
         for session in self.get_all_active_sessions():

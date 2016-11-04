@@ -3,13 +3,15 @@ import logging
 
 import argparse
 import sys
-
+from collections import namedtuple
 import socket
 import select
 
 from port_for import select_random as get_random_port
-from sft.utils.collections import SockCollection
 from sft.common.config import Config
+
+
+SockCollection = namedtuple('SockCollection', ['inputs', 'outputs'])
 
 
 logging.basicConfig(
