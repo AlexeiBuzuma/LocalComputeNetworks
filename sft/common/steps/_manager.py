@@ -3,7 +3,6 @@ import logging
 from sft.common.steps import steps as _default_steps
 from sft.drivers.loader import get_protocol_driver
 
-
 LOG = logging.getLogger(__name__)
 
 
@@ -12,18 +11,40 @@ class StepManager:
 
        Steps can differ based on driver loaded.
     """
-    # ToDo: Add server/client steps differentiation
 
-    def __init__(self):
-        super().__init__()
-        self._steps = _default_steps
-        driver_steps = get_protocol_driver().get_server_steps()
-        self._steps.update(driver_steps)
+    def __init__(self, role):
+        """
+        :param role: possible values: ["client", "server"]
+        """
+
+        self._role = role
+        self._steps = dict()
+
+        self._load_default_steps()
+        self._load_role_steps()
+        self._load_driver_steps()
 
         LOG.debug('Selection steps: %r', self.get_selection_steps())
         LOG.debug('Reading steps: %r', self.get_reading_steps())
         LOG.debug('Writing steps: %r', self.get_writing_steps())
         LOG.debug('State_check steps: %r', self.get_state_check_steps())
+
+    def _load_default_steps(self):
+        self._steps.update(_default_steps)
+
+    def _load_role_steps(self):
+        if self._role == "server":
+            from sft.server.steps import steps as _server_steps
+            self._steps.update(_server_steps)
+        elif self._role == "client":
+            from sft.client.steps import steps as _client_steps
+            self._steps.update(_client_steps)
+
+    def _load_driver_steps(self):
+        if self._role == "server":
+            self._steps.update(get_protocol_driver().get_server_steps())
+        elif self._role == "client":
+            self._steps.update(get_protocol_driver().get_client_steps())
 
     def get_selection_steps(self):
         return self._steps['socket_selector']
@@ -42,4 +63,4 @@ class StepManager:
             self._steps['packet_data_writer']
 
     def get_state_check_steps(self):
-        return self._steps['server_state_check']
+        return self._steps['state_check']

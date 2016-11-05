@@ -19,7 +19,7 @@ class SFTClient(ClientBase):
     def __init__(self, protocol='tcp', host=None):
         super().__init__()
         load_protocol_driver(protocol)
-        step_manager = StepManager()
+        step_manager = StepManager("client")
         self._selection_steps = step_manager.get_selection_steps()
         self._reading_steps = step_manager.get_reading_steps()
         self._writing_steps = step_manager.get_writing_steps()
