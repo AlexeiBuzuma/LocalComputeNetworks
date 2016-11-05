@@ -1,27 +1,35 @@
 import logging
 from sft.common.config import Config
 
-from sft.common.sessions.session_manager import SessionManager
-from sft.client.client import sockets
-
 
 LOG = logging.getLogger(__name__)
 
 _config = Config()
-_session_manager = SessionManager()
 
 
-def raw_data_reader(socket_list):
+def raw_data_reader(data):
     """Receive data from tcp sockets.
 
-       :param socket_list: List of sockets objects
-       :return: [(client_addr, data), (client_addr, data), ...]
+       :param socket_list: List whith only one socket for reading data
+       :return: [(server_addr, data), ]
     """
-    LOG.debug('tcp raw_data_reader step')
-    LOG.debug("socket_list: {}".format(socket_list))
-    service_socket, data_socket = socket_list
+
+    LOG.debug('Client tcp raw_data_reader step')
+    LOG.debug("socket_list: {}".format(data))
+
+    service_socket, socket_list = data
     buffer_size = _config.tcp_buffer_size
 
     raw_data = []
+    for socket in socket_list:
+        reading_data = socket.recv(buffer_size)
+        client_addr = socket.getpeername()
+
+        # Socket closed by server
+        # ToDo: Ask user for trying reactivation
+        if not data:
+            raise Exception("Server socket closed")
+
+        raw_data = [(client_addr, data)]
 
     return raw_data
