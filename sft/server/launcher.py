@@ -10,7 +10,7 @@ def _parse_args():
     parser.add_argument('--host', help='server_ip:server_port')
     parser.add_argument('-v', '--verbose', action="store_true",
                         help='Log debug info')
-    parser.add_argument("-m", dest="mode", help="TCP or UDP mode",
+    parser.add_argument('-m', '--mode', dest="mode", help="TCP or UDP mode",
                         choices=["tcp", "udp"], required=True)
     args = parser.parse_args()
 

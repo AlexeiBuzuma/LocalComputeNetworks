@@ -29,6 +29,7 @@ def raw_data_reader(socket_list):
             client_socket, client_addr = service_socket.accept()
             sockets[client_addr] = client_socket
             _session_manager.create_session(client_addr)
+            LOG.info('Physical connection with %s:%d was established' % client_addr)
         else:
             data = socket.recv(buffer_size)
             client_addr = socket.getpeername()

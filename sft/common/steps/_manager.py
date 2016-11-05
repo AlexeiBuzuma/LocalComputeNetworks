@@ -53,12 +53,12 @@ class StepManager:
         return self._steps['raw_data_reader'] +\
             self._steps['lastrecv_timestamp_updater'] +\
             self._steps['raw_data_normalizer'] +\
-            self._steps['heartbit_reciever'] +\
+            self._steps['heartbeat_receiver'] +\
             self._steps['packet_dispatcher']
 
     def get_writing_steps(self):
         return self._steps['payload_collector'] +\
-            self._steps['heartbit_sender'] +\
+            self._steps['heartbeat_sender'] +\
             self._steps['lastsent_timestamp_updater'] +\
             self._steps['packet_data_writer']
 

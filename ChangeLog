@@ -1,6 +1,11 @@
 CHANGES
 =======
 
+* Mofied StepManager for using new step hierarchy
+* Added server state check step
+* Tools and utils directories were replaced
+* Fixed config path for windows
+* Added basic client structure
 * Server-Client common part is now separated
 * Moved socket selector step to globel section
 * Added socket_Selection step

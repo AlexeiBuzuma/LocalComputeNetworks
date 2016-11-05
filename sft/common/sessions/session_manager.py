@@ -7,7 +7,7 @@
 import time
 from enum import Enum
 
-from sft.common.commands.base import CommandBase, CommandFinished
+from sft.common.commands.base import CommandBase, CommandFinished, CommandIds
 from sft.common.commands.factory import CommandFactory
 from sft.common.config import Config
 from sft.common.utils.common import Singleton
@@ -38,8 +38,7 @@ class Session:
         self.client_address = client_address
         self.client_uuid = None
 
-        # ToDo: It should create 'connect' command, not None
-        self.__command = None
+        self.__command = CommandFactory().get_command_by_id(CommandIds.CONNECT_COMMAND_ID)(self)
 
         self.__last_recv_time = time.time()
         self.__last_sent_time = time.time()
@@ -81,12 +80,12 @@ class Session:
             raise AttributeError()
         self.__command = value
 
-    def command_recieve_data(self, data):
+    def command_receive_data(self, data):
         if self.__command is None:
             self.__command = CommandFactory().create_command(data)
         else:
             try:
-                self.__command.recieve_data(data)
+                self.__command.receive_data(data)
             except CommandFinished as e:
                 self.__command = None
 
