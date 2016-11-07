@@ -14,7 +14,7 @@ LOG = logging.getLogger(__name__)
 class SFTServer(ServerBase):
     """SFT Server class.
 
-       All server functionality is devided into 4 phases: socket selection,
+       All server functionality is divided into 4 phases: socket selection,
        data reading, data writing and state check. All phases consist of
        execution steps which are influenced by active protocol driver.
        All steps of a phase are executed one by one, execution result of the
@@ -41,7 +41,7 @@ class SFTServer(ServerBase):
         CommandFactory.init(load_commands())
 
         if self._host is None:
-            self._host = ('localhost', None)
+            self._host = (socket.gethostname(), 0)
         self.sockets['service_socket'] = service_socket = self._create_socket(*self._host)
         service_socket.listen(10)
         LOG.info('Starting server at %s:%d' % service_socket.getsockname())
@@ -69,10 +69,8 @@ class SFTServer(ServerBase):
         return result
 
     @staticmethod
-    def _create_socket(hostname='localhost', port=None):
+    def _create_socket(hostname=socket.gethostname(), port=0):
         sock = socket.socket()
-        if port is None:
-            port = 0
         sock.bind((hostname, port))
         return sock
 

@@ -14,12 +14,17 @@ def run_tcp_client(ip, port, debug):
     s = socket.socket()
     s.connect((ip, port))
 
-    while True:
-        message = b'\x00' * MESSAGE_SIZE
-        if debug:
-            print("Sending message: {0}... ".format(message))
-        s.send(message)
-        sleep(0.9)
+    try:
+        while True:
+            message = b'\x63' * MESSAGE_SIZE
+            if debug:
+                print("Sending message: {0}... ".format(message))
+            s.send(message)
+            sleep(0.9)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        s.close()
 
 
 def run_udp_client(ip, port, debug):

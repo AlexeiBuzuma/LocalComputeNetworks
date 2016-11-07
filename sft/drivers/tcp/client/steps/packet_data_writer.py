@@ -1,6 +1,6 @@
 import logging
 
-from sft.server.server import sockets
+from sft.client.client import sockets
 
 
 LOG = logging.getLogger(__name__)

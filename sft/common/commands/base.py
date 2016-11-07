@@ -1,12 +1,12 @@
 import logging
 import abc
-from enum import Enum
+from enum import IntEnum
 
 
 LOG = logging.getLogger(__name__)
 
 
-class CommandIds(Enum):
+class CommandIds(IntEnum):
     CONNECT_COMMAND_ID = 1
     CLOSE_COMMAND_ID = 2
     HEARTBEAT_COMMAND_ID = 3

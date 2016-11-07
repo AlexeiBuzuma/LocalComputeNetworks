@@ -16,10 +16,10 @@ class SFTClient(ClientBase):
 
     sockets = dict()
 
-    def __init__(self, protocol='tcp', host=None):
+    def __init__(self, protocol='tcp', server_address=None):
         super().__init__()
         self._protocol = protocol
-        self._host = host
+        self._server_address = server_address
 
     def _initialize(self):
         load_protocol_driver(self._protocol)
@@ -32,9 +32,9 @@ class SFTClient(ClientBase):
 
         CommandFactory.init(load_commands())
 
-        if self._host is None:
-            self._host = ('localhost', None)
-        self.sockets['service_socket'] = service_socket = self._create_socket(*self._host)
+        if self._server_address is None:
+            self._server_address = ('localhost', 0)
+        self.sockets['service_socket'] = service_socket = self._create_socket(*self._server_address)
         service_socket.listen(10)
         LOG.info('Starting server at %s:%d' % service_socket.getsockname())
 
@@ -43,7 +43,7 @@ class SFTClient(ClientBase):
         readable, writable, exceptional = self._execute_steps(self._selection_steps, selection_step_args)
 
         self._execute_steps(self._reading_steps, (self.sockets['service_socket'], readable))
-        self._execute_steps(self._writing_steps, (self.sockets['service_socket'], writable))
+        self._execute_steps(self._writing_steps, writable)
         self._execute_steps(self._state_check_steps)
 
         from time import sleep; sleep(1)  # debug
@@ -61,10 +61,8 @@ class SFTClient(ClientBase):
         return result
 
     @staticmethod
-    def _create_socket(hostname='localhost', port=None):
+    def _create_socket(hostname='localhost', port=0):
         sock = socket.socket()
-        if port is None:
-            port = 0
         sock.bind((hostname, port))
         return sock
 

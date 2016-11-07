@@ -31,5 +31,5 @@ steps = {
     'lastsent_timestamp_updater': (lastsent_timestamp_updater, ),
     'packet_data_writer': (lambda x: LOG.debug('std packet_data_writer step'), ),
 
-    'server_state_check': (lambda x: LOG.debug('std server_state_check step'), ),
+    'state_check': (lambda x: LOG.debug('std state_check step'), ),
 }
