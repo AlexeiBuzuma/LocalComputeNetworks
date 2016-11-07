@@ -1,5 +1,7 @@
 import logging
+
 import select
+
 
 LOG = logging.getLogger(__name__)
 
