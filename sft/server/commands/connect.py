@@ -24,7 +24,7 @@ class Connect(CommandBase):
 
     def receive_data(self, data):
         self.session_instance.activate_session('session_ololo')
-        LOG.info('Client %s:%d connected' % self.session_instance.client_address)
+        LOG.info('Client %s:%d: logical connection established' % self.session_instance.client_address)
         raise CommandFinished
 
     def generate_data(self):

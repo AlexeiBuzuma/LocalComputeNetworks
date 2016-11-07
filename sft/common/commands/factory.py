@@ -11,6 +11,7 @@ LOG = logging.getLogger(__name__)
 class CommandFactory(metaclass=Singleton):
     def __init__(self):
         super().__init__()
+        LOG.info('Command factory created. Loaded commands: %r' % self._commands_by_id)
 
     @classmethod
     def init(cls, commands):
@@ -27,9 +28,5 @@ class CommandFactory(metaclass=Singleton):
         com_id = get_command_id(first_packet_data)
         if com_id == CommandIds.CONNECT_COMMAND_ID:
             return None
-
-        try:
-            return self._commands_by_id[com_id](first_packet_data)
-        except KeyError as e:
-            raise ValueError('There is no command with given id (%d)' % com_id)
+        return self.get_command_by_id(com_id)(first_packet_data)
 

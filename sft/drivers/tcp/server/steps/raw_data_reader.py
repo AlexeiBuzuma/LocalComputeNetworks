@@ -1,45 +1,51 @@
 import logging
 from sft.common.config import Config
 
+import socket
 from sft.common.sessions.session_manager import SessionManager
-from sft.server.server import sockets
+from sft.common.socket_manager import SocketManager
 
 
 LOG = logging.getLogger(__name__)
 
-_config = Config()
 _session_manager = SessionManager()
+_socket_manager = SocketManager()
+_buffer_size = Config().tcp_buffer_size
 
 
-def raw_data_reader(socket_list):
+def _handle_client_disconnection(client_address):
+    _session_manager.deactivate_session_by_address(client_address)
+    _socket_manager.delete_socket_by_address(client_address)
+    LOG.info('Client %s:%d: physical connection closed' % client_address)
+
+
+def raw_data_reader(dummy_arg):
     """Receive data from tcp sockets.
 
        :param socket_list: List of sockets objects
-       :return: [(client_addr, data), (client_addr, data), ...]
+       :return: [(client_address, data), (client_address, data), ...]
     """
     LOG.debug('tcp raw_data_reader step')
-    LOG.debug("socket_list: {}".format(socket_list))
-    service_socket, data_socket = socket_list
-    buffer_size = _config.tcp_buffer_size
 
+    service_socket = _socket_manager.get_server_socket()
+    sockets = _socket_manager.get_readable_sockets()
     raw_data = []
 
-    for socket in data_socket:
-        if socket == service_socket:
-            client_socket, client_addr = service_socket.accept()
-            sockets[client_addr] = client_socket
-            _session_manager.create_session(client_addr)
-            LOG.info('Physical connection with %s:%d was established' % client_addr)
+    for sock in sockets:
+        if sock == service_socket:
+            client_socket, client_address = service_socket.accept()
+            _socket_manager.add_socket(client_socket, client_address)
+            _session_manager.create_session(client_address)
+            LOG.info('Client %s:%d: physical connection established' % client_address)
         else:
-            data = socket.recv(buffer_size)
-            client_addr = socket.getpeername()
-
-            if not data:
-                _session_manager.deactivate_session_by_address(client_addr)
-                sockets[client_addr].close()
-                del sockets[client_addr]
+            client_address = sock.getpeername()
+            try:
+                data = sock.recv(_buffer_size)
+                if data:
+                    raw_data.append((client_address, data))
+                else:
+                    _handle_client_disconnection(client_address)
+            except socket.error:
+                _handle_client_disconnection(client_address)
                 continue
-
-            raw_data.append((client_addr, data))
-
     return raw_data
