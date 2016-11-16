@@ -22,10 +22,12 @@ class SocketManager(metaclass=Singleton):
             return self._server_socket
 
     def get_socket_by_address(self, address):
-        try:
+        if address in self._sockets:
             return self._sockets[address]
-        except KeyError:
-            raise ValueError('Socket with given address does\'nt exist')
+        elif self._server_socket and self._server_socket.getpeername() == address:
+            return self._server_socket
+        else:
+            raise ValueError("Socket with address '{}' does'nt exist".format(address))
 
     def add_socket(self, sock, address=None):
         if address is None:

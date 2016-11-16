@@ -173,10 +173,10 @@ class SessionManager(metaclass=Singleton):
 
         session.status = SessionStatus.inactive
 
-    def get_all_active_sessions(self):
-        """Find and return sessions with active status."""
+    def get_all_not_inactive_sessions(self):
+        """Find and return sessions with not inactive status."""
 
-        active_sessions = [session for session in self._sessions if session.status == SessionStatus.active]
+        active_sessions = [session for session in self._sessions if session.status != SessionStatus.inactive]
         return active_sessions
 
     def get_session_by_address(self, client_address, create_new=True):
@@ -186,7 +186,7 @@ class SessionManager(metaclass=Singleton):
            according to 'create_new' argument.
         """
 
-        for session in self.get_all_active_sessions():
+        for session in self.get_all_not_inactive_sessions():
             if session.client_address == client_address:
                 return session
 
