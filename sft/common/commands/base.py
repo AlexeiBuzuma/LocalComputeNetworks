@@ -17,6 +17,11 @@ class CommandIds(IntEnum):
     SAMPLE_COMMAND_ID = 99
 
 
+class ErrorIds(IntEnum):
+    CONNECTION_SUCCESSFUL = 1
+    CONNECTION_ERROR = 2
+
+
 class CommandFinished(Exception):
     pass
 

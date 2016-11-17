@@ -92,7 +92,10 @@ class Session:
     def command_generate_data(self):
         data = None
         if self.__command is not None:
-            data = self.__command.generate_data()
+            try:
+                data = self.__command.generate_data()
+            except CommandFinished:
+                self.__command = None
         if data is None:
             last_sent_interval = time.time() - self.__last_sent_time
             if last_sent_interval > _conf.heartbeat_sender_interval:
@@ -110,7 +113,8 @@ class Session:
         self.__last_sent_time = time.time()
 
     def __str__(self):
-        return "Session: Client addr: '{}', Status: '{}'.".format(self.client_address, self.__status)
+        return "Session: Client addr: '{}', Status: '{}' uuid: '{}'."\
+            .format(self.client_address, self.__status, self.client_uuid)
 
 
 class SessionManager(metaclass=Singleton):

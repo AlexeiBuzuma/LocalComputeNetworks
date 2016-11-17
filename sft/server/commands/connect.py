@@ -1,6 +1,6 @@
 import logging
 
-from sft.common.commands.base import CommandBase, CommandFinished, CommandIds
+from sft.common.commands.base import CommandBase, CommandFinished, CommandIds, ErrorIds
 from sft.common.utils.packets import get_payload, generate_packet
 
 
@@ -14,8 +14,9 @@ class Connect(CommandBase):
     def __init__(self, session_instance):
         self._initialize(session_instance)
 
-        # ToDo: replace this bullshit with smt else
-        self._flag = None
+        # ToDo: replace this bullshit with smt else?? (but is it real? I think no)
+        self._send_response_flag = None
+        self._raise_command_finished = None
 
     @staticmethod
     def get_command_id():
@@ -32,13 +33,14 @@ class Connect(CommandBase):
         uuid = get_payload(data)
         self.session_instance.activate_session(uuid)
         LOG.info('Client %s:%d: logical connection established' % self.session_instance.client_address)
-        self._flag = 1
-        # raise CommandFinished
+        LOG.info("Created new session: {}".format(str(self.session_instance)))
+        self._send_response_flag = True
 
     def generate_data(self):
-        print("Generate data")
-        if self._flag == 1:
-            # ToDo: enumeration for all error codes status
-            self._flag = None
-            return generate_packet(0, CommandIds.CONNECT_COMMAND_ID.value, 1, "123")
+        if self._raise_command_finished:
+            raise CommandFinished
+
+        if self._send_response_flag:
+            self._raise_command_finished = True
+            return generate_packet(CommandIds.CONNECT_COMMAND_ID.value, ErrorIds.CONNECTION_SUCCESSFUL.value, "")
         return None
