@@ -23,6 +23,14 @@ class Config(metaclass=Singleton):
         self.heartbeat_sender_interval = None
         self.connection_break_timeout = None
 
+        # Sizes of packet header fields
+        self.packet_id_size = None
+        self.command_id_size = None
+        self.error_code_size = None
+        self.payload_size = None
+
+        self.package_size = None
+
         self.config = configparser.ConfigParser()
         self.config.read(CONFIG_PATH)
         self._parse_config_file()
@@ -38,6 +46,13 @@ class Config(metaclass=Singleton):
             "accumulator_packet_size",
             "heartbeat_sender_interval",
             "connection_break_timeout",
+
+            "packet_id_size",
+            "command_id_size",
+            "error_code_size",
+            "payload_size",
+
+            "package_size",
         ]
         space_separated_list_fields = []
 

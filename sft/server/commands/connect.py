@@ -1,6 +1,7 @@
 import logging
 
-from sft.common.commands.base import CommandBase, CommandFinished, CommandIds
+from sft.common.commands.base import CommandBase, CommandFinished, CommandIds, ErrorIds
+from sft.common.utils.packets import get_payload, generate_packet
 
 
 LOG = logging.getLogger(__name__)
@@ -13,6 +14,10 @@ class Connect(CommandBase):
     def __init__(self, session_instance):
         self._initialize(session_instance)
 
+        # ToDo: replace this bullshit with smt else?? (but is it real? I think no)
+        self._send_response_flag = None
+        self._raise_command_finished = None
+
     @staticmethod
     def get_command_id():
         return CommandIds.CONNECT_COMMAND_ID
@@ -23,9 +28,19 @@ class Connect(CommandBase):
         self.session_instance = session_instance
 
     def receive_data(self, data):
-        self.session_instance.activate_session('session_ololo')
+        # ToDo: session recovering
+
+        uuid = get_payload(data)
+        self.session_instance.activate_session(uuid)
         LOG.info('Client %s:%d: logical connection established' % self.session_instance.client_address)
-        raise CommandFinished
+        LOG.info("Created new session: {}".format(str(self.session_instance)))
+        self._send_response_flag = True
 
     def generate_data(self):
+        if self._raise_command_finished:
+            raise CommandFinished
+
+        if self._send_response_flag:
+            self._raise_command_finished = True
+            return generate_packet(CommandIds.CONNECT_COMMAND_ID.value, ErrorIds.CONNECTION_SUCCESSFUL.value, "")
         return None

@@ -92,7 +92,10 @@ class Session:
     def command_generate_data(self):
         data = None
         if self.__command is not None:
-            data = self.__command.generate_data()
+            try:
+                data = self.__command.generate_data()
+            except CommandFinished:
+                self.__command = None
         if data is None:
             last_sent_interval = time.time() - self.__last_sent_time
             if last_sent_interval > _conf.heartbeat_sender_interval:
@@ -110,7 +113,8 @@ class Session:
         self.__last_sent_time = time.time()
 
     def __str__(self):
-        return "Session: Client addr: '{}', Status: '{}'.".format(self.client_address, self.__status)
+        return "Session: Client addr: '{}', Status: '{}' uuid: '{}'."\
+            .format(self.client_address, self.__status, self.client_uuid)
 
 
 class SessionManager(metaclass=Singleton):
@@ -173,10 +177,10 @@ class SessionManager(metaclass=Singleton):
 
         session.status = SessionStatus.inactive
 
-    def get_all_active_sessions(self):
-        """Find and return sessions with active status."""
+    def get_all_not_inactive_sessions(self):
+        """Find and return sessions with not inactive status."""
 
-        active_sessions = [session for session in self._sessions if session.status == SessionStatus.active]
+        active_sessions = [session for session in self._sessions if session.status != SessionStatus.inactive]
         return active_sessions
 
     def get_session_by_address(self, client_address, create_new=True):
@@ -186,7 +190,7 @@ class SessionManager(metaclass=Singleton):
            according to 'create_new' argument.
         """
 
-        for session in self.get_all_active_sessions():
+        for session in self.get_all_not_inactive_sessions():
             if session.client_address == client_address:
                 return session
 

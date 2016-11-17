@@ -15,7 +15,7 @@ def server_state_check(data):
     LOG.debug("Server state check")
 
     session_manager = SessionManager()
-    active_sessions = session_manager.get_all_active_sessions()
+    active_sessions = session_manager.get_all_not_inactive_sessions()
 
     for session in active_sessions:
         sec_from_last_recv = time.time() - session.last_recv_time
