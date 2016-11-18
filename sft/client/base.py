@@ -38,11 +38,11 @@ class ClientBase(metaclass=abc.ABCMeta):
             self._main_loop()
 
     def _prompt_loop(self):
+        print()
         text = prompt(
             self.prompt, patch_stdout=True, on_abort=AbortAction.RAISE_EXCEPTION,
             eventloop=create_eventloop(inputhook=self._functional_loop))
         self.cmd_dispatcher.onecmd(text)
-        print()
 
         while is_cli_input_disabled():
             self._main_loop()

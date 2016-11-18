@@ -33,7 +33,7 @@ class Connect(ClientCommandBase):
     def receive_data(self, data):
         LOG.info('Connected to %s:%d' % self.session_instance.client_address)
 
-        if data and get_error_code(data) == ErrorIds.CONNECTION_SUCCESSFUL.value:
+        if data and get_error_code(data) == ErrorIds.SUCCESSFUL:
             self.session_instance.activate_session(self._client_uuid)
             LOG.info("Created new session: {}".format(str(self.session_instance)))
             raise CommandFinished
@@ -45,6 +45,6 @@ class Connect(ClientCommandBase):
         if self._generate_next:
             self._generate_next = False
             self._client_uuid = str(uuid.uuid4())
-            return generate_packet(CommandIds.CONNECT_COMMAND_ID.value, 0, self._client_uuid)
+            return generate_packet(CommandIds.CONNECT_COMMAND_ID, 0, self._client_uuid)
         else:
             return None
