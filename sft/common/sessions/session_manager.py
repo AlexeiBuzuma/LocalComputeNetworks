@@ -76,7 +76,7 @@ class Session:
 
     @command.setter
     def command(self, value):
-        if not issubclass(value, CommandBase):
+        if not isinstance(value, CommandBase):
             raise AttributeError()
         self.__command = value
 

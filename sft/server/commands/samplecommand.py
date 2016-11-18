@@ -1,6 +1,6 @@
 import logging
 
-from sft.common.commands.base import CommandBase, CommandFinished, CommandIds
+from sft.common.commands.base import ServerCommandBase, CommandFinished, CommandIds
 
 
 LOG = logging.getLogger(__name__)
@@ -8,7 +8,7 @@ LOG = logging.getLogger(__name__)
 __all__ = ['SampleCommand']
 
 
-class SampleCommand(CommandBase):
+class SampleCommand(ServerCommandBase):
     """Command implementation example."""
     @staticmethod
     def get_command_id():

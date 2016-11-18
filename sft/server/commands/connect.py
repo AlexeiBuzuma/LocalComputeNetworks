@@ -1,6 +1,6 @@
 import logging
 
-from sft.common.commands.base import CommandBase, CommandFinished, CommandIds, ErrorIds
+from sft.common.commands.base import ServerCommandBase, CommandFinished, CommandIds, ErrorIds
 from sft.common.utils.packets import get_payload, generate_packet
 
 
@@ -9,7 +9,7 @@ LOG = logging.getLogger(__name__)
 __all__ = ['Connect']
 
 
-class Connect(CommandBase):
+class Connect(ServerCommandBase):
     # ToDo: implement server's connect command logic
     def __init__(self, session_instance):
         self._initialize(session_instance)

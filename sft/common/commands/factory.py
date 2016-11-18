@@ -11,7 +11,7 @@ LOG = logging.getLogger(__name__)
 class CommandFactory(metaclass=Singleton):
     def __init__(self):
         super().__init__()
-        LOG.info('Command factory created. Loaded commands: %r' % self._commands_by_id)
+        LOG.debug('Command factory created. Loaded commands: %r' % self._commands_by_id)
 
     @classmethod
     def init(cls, commands):
@@ -29,4 +29,3 @@ class CommandFactory(metaclass=Singleton):
         if com_id == CommandIds.CONNECT_COMMAND_ID:
             return None
         return self.get_command_by_id(com_id)(first_packet_data)
-
