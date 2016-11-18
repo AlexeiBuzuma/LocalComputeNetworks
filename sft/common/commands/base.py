@@ -28,11 +28,11 @@ class CommandFinished(Exception):
 
 class CommandBase(metaclass=abc.ABCMeta):
     """Base class for all sft commands."""
-    def __init__(self, first_packet_data=None, was_crashed=False):
-        self._initialize(first_packet_data)
+    def __init__(self, *args, **kwargs):
+        self._initialize(*args, **kwargs)
 
     @abc.abstractmethod
-    def _initialize(self, first_packet_data):
+    def _initialize(self, *args, **kwargs):
         pass
 
     @staticmethod
@@ -47,3 +47,10 @@ class CommandBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def generate_data(self):
         pass
+
+
+class ServerCommandBase(CommandBase):
+    @abc.abstractmethod
+    def _initialize(self, first_packet_data):
+        pass
+

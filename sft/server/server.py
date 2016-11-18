@@ -50,7 +50,7 @@ class SFTServer(ServerBase):
         self._execute_steps(self._writing_steps)
         self._execute_steps(self._state_check_steps)
 
-        from time import sleep; sleep(1)  # debug
+        # from time import sleep; sleep(1)  # debug
 
     def _terminate(self):
         self._sock_manager.clear()

@@ -1,11 +1,19 @@
 CHANGES
 =======
 
+* Implemented client cli
+* Added connection command
+* Connection command (in progress)
+* Implemented socket manager
+* Some changes for server stability
+* Payload_collector step implemented
+* Added raw_data_reader and raw_data_normalizer steps for tcp client
 * Mofied StepManager for using new step hierarchy
 * Added server state check step
 * Tools and utils directories were replaced
 * Fixed config path for windows
 * Added basic client structure
+* Some command and client/server changes
 * Server-Client common part is now separated
 * Moved socket selector step to globel section
 * Added socket_Selection step
