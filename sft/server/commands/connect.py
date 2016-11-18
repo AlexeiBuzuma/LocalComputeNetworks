@@ -42,5 +42,5 @@ class Connect(ServerCommandBase):
 
         if self._send_response_flag:
             self._raise_command_finished = True
-            return generate_packet(CommandIds.CONNECT_COMMAND_ID.value, ErrorIds.CONNECTION_SUCCESSFUL.value, "")
+            return generate_packet(CommandIds.CONNECT_COMMAND_ID, ErrorIds.SUCCESSFUL, "")
         return None

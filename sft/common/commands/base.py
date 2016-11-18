@@ -18,8 +18,8 @@ class CommandIds(IntEnum):
 
 
 class ErrorIds(IntEnum):
-    CONNECTION_SUCCESSFUL = 1
-    CONNECTION_ERROR = 2
+    SUCCESSFUL = 1
+    ERROR = 2
 
 
 class CommandFinished(Exception):
