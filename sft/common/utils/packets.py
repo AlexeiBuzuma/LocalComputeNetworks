@@ -14,6 +14,9 @@ _config = Config()
 _command_id_size = _config.command_id_size
 _error_code_size = _config.error_code_size
 _payload_size = _config.payload_size
+_packet_size = _config.package_size
+_header_size = _command_id_size + _error_code_size + _payload_size
+_packet_with_header_payload_size = _packet_size - _header_size
 
 
 def get_command_id(packet_payload):
@@ -35,12 +38,30 @@ def get_payload(packet_payload):
     return packet_payload[start_index:start_index+get_payload_size(packet_payload)].decode("utf-8")
 
 
+def get_payload_bytes(packet_payload):
+    start_index = _command_id_size + _error_code_size + _payload_size
+    return packet_payload[start_index:start_index+get_payload_size(packet_payload)]
+
+
+def get_payload_by_size(packet_payload, size):
+    start_index = _command_id_size + _error_code_size + _payload_size
+    return packet_payload[start_index:start_index+size]
+
+
 def generate_header(command_id, error_code, payload_size):
     header = int.to_bytes(command_id, _command_id_size, "big")
     header += int.to_bytes(error_code, _error_code_size, "big")
     header += int.to_bytes(payload_size, _payload_size, "big")
 
     return header
+
+
+def get_header_size():
+    return _header_size
+
+
+def get_packet_with_header_payload_size():
+    return _packet_with_header_payload_size
 
 
 def generate_packet(command_id, error_code, data):
