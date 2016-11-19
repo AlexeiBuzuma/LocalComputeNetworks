@@ -19,6 +19,7 @@ __all__ = ['Download']
 
 class Download(ServerCommandBase):
     def __init__(self, first_packet):
+
         self._file_path = os.path.join(STORAGE_PATH, get_payload(first_packet))
 
         self._sended_bytes = 0
@@ -47,6 +48,7 @@ class Download(ServerCommandBase):
 
         if get_error_code(data) == ErrorIds.DOWNLOAD_SUCCESSFUL:
             self._file_descriptor.close()
+
             print("Download finished")
             raise CommandFinished
 
@@ -60,6 +62,7 @@ class Download(ServerCommandBase):
         if self._send_error:
             self._raise_command_finished = True
             return generate_packet(CommandIds.DOWNLOAD_COMMAND_ID, ErrorIds.ERROR, "File not found")
+
         # print("{}/{}".format(self._sended_bytes, self._file_size))
 
         if self._generate_first_packet:
@@ -69,6 +72,7 @@ class Download(ServerCommandBase):
 
             if self._file_size + len(header) <= _config.package_size:
                 package = header + self._file_descriptor.read()
+
                 package = package + bytes(_config.package_size - len(package))
                 self._wait_for_approve = True
 
@@ -79,6 +83,7 @@ class Download(ServerCommandBase):
                 return package
         else:
             read_data = self._file_descriptor.read(_config.package_size)
+
             self._sended_bytes += len(read_data)
             if len(read_data) < _config.package_size:
                 self._wait_for_approve = True

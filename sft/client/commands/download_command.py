@@ -9,6 +9,7 @@ from sft.common.utils.packets import (generate_packet, generate_header, get_payl
 get_payload_size, get_header_size, get_error_code)
 
 
+
 LOG = logging.getLogger(__name__)
 _config = Config()
 
@@ -34,7 +35,6 @@ class Download(ClientCommandBase):
 
     def _initialize(self, first_packet_data):
         try:
-            print(first_packet_data)
             args = _parse_args(first_packet_data)
         except SystemExit as e:
             raise CommandInvalid(str(e))
@@ -54,7 +54,6 @@ class Download(ClientCommandBase):
 
     def receive_data(self, data):
 
-        # print(data)
         if self._first_recived_package:
             if get_error_code(data) == ErrorIds.ERROR:
                 print(get_payload(data))
@@ -72,7 +71,7 @@ class Download(ClientCommandBase):
         else:
             if self._file_size - self._readed_bytes <= _config.package_size:
                 self._client_file_descriptor.write(data[:self._file_size - self._readed_bytes])
-                # print("bla")
+
                 self._send_approve = True
             else:
                 self._client_file_descriptor.write(data)
@@ -90,7 +89,8 @@ class Download(ClientCommandBase):
         if self._send_approve:
             print("Generate package")
             self._raise_finished = True
-            return generate_packet(CommandIds.DOWNLOAD_COMMAND_ID, ErrorIds.DOWNLOAD_SUCCESSFUL, "Hi!")
+
+            return generate_packet(CommandIds.DOWNLOAD_COMMAND_ID, ErrorIds.DOWNLOAD_SUCCESSFUL, "")
 
         if self._generate_request_package:
             print("Generate package")

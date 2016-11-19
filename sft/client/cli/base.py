@@ -1,6 +1,7 @@
 import cmd
 from sft.client.commands import load_commands
 from sft.common.sessions.session_manager import SessionManager
+from sft.common.commands.base import CommandInvalid
 
 
 _session_manager = SessionManager()
