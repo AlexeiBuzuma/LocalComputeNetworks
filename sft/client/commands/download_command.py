@@ -5,7 +5,8 @@ import shlex
 from .base import ClientCommandBase
 from sft.common.config import Config
 from sft.common.commands.base import CommandFinished, CommandInvalid, CommandIds, ErrorIds
-from sft.common.utils.packets import generate_packet, generate_header, get_payload, get_payload_size, get_header_size
+from sft.common.utils.packets import (generate_packet, generate_header, get_payload,
+get_payload_size, get_header_size, get_error_code)
 
 
 LOG = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ class Download(ClientCommandBase):
 
     def _initialize(self, first_packet_data):
         try:
+            print(first_packet_data)
             args = _parse_args(first_packet_data)
         except SystemExit as e:
             raise CommandInvalid(str(e))
@@ -51,8 +53,13 @@ class Download(ClientCommandBase):
         # self._header = generate_header(CommandIds.DOWNLOAD_COMMAND_ID, 0, len(self._file_path))
 
     def receive_data(self, data):
+
         # print(data)
         if self._first_recived_package:
+            if get_error_code(data) == ErrorIds.ERROR:
+                print(get_payload(data))
+                raise CommandFinished
+
             self._first_recived_package = False
             self._file_size = get_payload_size(data)
 
@@ -65,7 +72,7 @@ class Download(ClientCommandBase):
         else:
             if self._file_size - self._readed_bytes <= _config.package_size:
                 self._client_file_descriptor.write(data[:self._file_size - self._readed_bytes])
-                print("bla")
+                # print("bla")
                 self._send_approve = True
             else:
                 self._client_file_descriptor.write(data)
@@ -83,7 +90,7 @@ class Download(ClientCommandBase):
         if self._send_approve:
             print("Generate package")
             self._raise_finished = True
-            return generate_packet(CommandIds.DOWNLOAD_COMMAND_ID, ErrorIds.DOWNLOAD_SUCCESSFUL, "")
+            return generate_packet(CommandIds.DOWNLOAD_COMMAND_ID, ErrorIds.DOWNLOAD_SUCCESSFUL, "Hi!")
 
         if self._generate_request_package:
             print("Generate package")
