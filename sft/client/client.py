@@ -1,6 +1,7 @@
 import logging
 
 from sft.client.base import ClientBase
+from sft.common.commands.base import ProgramFinished
 from sft.drivers.loader import load_protocol_driver
 from sft.common.steps import StepManager
 from sft.common.commands.factory import CommandFactory

@@ -1,8 +1,7 @@
 import logging
 
 from sft.common.commands.base import ServerCommandBase, CommandFinished, CommandIds, ErrorIds
-from sft.common.utils.packets import get_payload, generate_packet
-
+from sft.common.utils.packets import get_payload, generate_packet, get_command_id
 
 LOG = logging.getLogger(__name__)
 
@@ -29,7 +28,9 @@ class Connect(ServerCommandBase):
 
     def receive_data(self, data):
         # ToDo: session recovering
-
+        if get_command_id(data) != CommandIds.CONNECT_COMMAND_ID:
+            LOG.warning('Unexpected command packet arrived!')
+            raise CommandFinished
         uuid = get_payload(data)
         self.session_instance.activate_session(uuid)
         LOG.info('Client %s:%d: logical connection established' % self.session_instance.client_address)
