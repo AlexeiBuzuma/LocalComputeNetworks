@@ -1,7 +1,7 @@
 import cmd
 from sft.client.commands import load_commands
 from sft.common.sessions.session_manager import SessionManager
-# from sft.common.commands.base import CommandInvalid
+from sft.common.commands.base import CommandInvalid
 
 
 _session_manager = SessionManager()
@@ -20,7 +20,11 @@ class Ololo:
     @staticmethod
     def _create_command_instance(command_class, args_line):
         session = _session_manager.get_all_not_inactive_sessions()[0]
-        session.command = command_class(args_line)
+
+        try:
+            session.command = command_class(args_line)
+        except SystemExit as e:
+            print(e)
 
 
 class CommandDispatcherBase(cmd.Cmd):

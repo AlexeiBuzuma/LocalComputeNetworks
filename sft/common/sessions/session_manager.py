@@ -5,7 +5,7 @@
 # ToDo TCP -> activate_session when processing 'CONNECT' command
 
 import time
-from enum import IntEnum
+from enum import Enum
 
 from sft.common.commands.base import CommandBase, CommandFinished, CommandIds, ProgramFinished
 from sft.common.commands.factory import CommandFactory
@@ -16,7 +16,7 @@ from sft.common.utils.packets import get_heartbeat_payload
 _conf = Config()
 
 
-class SessionStatus(IntEnum):
+class SessionStatus(Enum):
     """ Describes session status.
 
         active              -- fully active session
@@ -114,12 +114,12 @@ class Session:
         self.__last_sent_time = time.time()
 
     def __str__(self):
-        return "Session: Client addr: '{}', Status: '{}' uuid: '{}'."\
-            .format(self.client_address, self.__status, self.client_uuid)
+        return "Session: Client addr: '{}', Status: '{}' uuid: '{}' command: {}"\
+            .format(self.client_address, self.__status, self.client_uuid, self.command)
 
     def __repr__(self):
-        return "<Session: Client addr: '{}', Status: '{}' uuid: '{}'>"\
-            .format(self.client_address, self.__status, self.client_uuid)
+        return "<Session: Client addr: '{}', Status: '{}' uuid: '{}' command: '{}'>"\
+            .format(self.client_address, self.__status, self.client_uuid, self.command)
 
 
 class SessionManager(metaclass=Singleton):

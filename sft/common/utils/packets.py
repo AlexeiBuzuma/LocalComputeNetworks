@@ -19,6 +19,7 @@ _header_size = _command_id_size + _error_code_size + _payload_size
 _packet_with_header_payload_size = _packet_size - _header_size
 
 
+
 def get_command_id(packet_payload):
     return int.from_bytes(packet_payload[0:_command_id_size], 'big')
 
