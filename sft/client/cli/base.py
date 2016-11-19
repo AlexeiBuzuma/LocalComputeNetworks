@@ -1,14 +1,29 @@
 import cmd
 from sft.client.commands import load_commands
 from sft.common.sessions.session_manager import SessionManager
+from sft.common.commands.base import CommandInvalid
 
 
 _session_manager = SessionManager()
 
 
-def _create_command_instance(command_class, args_line):
-    session = _session_manager.get_all_not_inactive_sessions()[0]
-    session.command = command_class(args_line)
+class Ololo:
+    """ Ololo solution.
+    """
+
+    def __init__(self, command_class):
+        self._command_class = command_class
+
+    def __call__(self, line):
+        self._create_command_instance(self._command_class, line)
+
+    @staticmethod
+    def _create_command_instance(command_class, args_line):
+        session = _session_manager.get_all_not_inactive_sessions()[0]
+        try:
+            session.command = command_class(args_line)
+        except SystemExit as e:
+            print(e)
 
 
 class CommandDispatcherBase(cmd.Cmd):
@@ -22,7 +37,7 @@ class CommandDispatcherBase(cmd.Cmd):
         for command in load_commands().values():
             alias = command.get_command_alias()
             if alias is not None:
-                cmd_callable = lambda self, line: _create_command_instance(command, line)
+                cmd_callable = Ololo(command)
                 cmd_callable.__doc__ = command.__doc__
                 setattr(cls, 'do_' + alias, cmd_callable)
         return super().__new__(cls, *args, **kwargs)

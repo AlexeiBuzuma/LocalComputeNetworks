@@ -20,9 +20,15 @@ class CommandIds(IntEnum):
 class ErrorIds(IntEnum):
     SUCCESSFUL = 1
     ERROR = 2
+    DOWNLOAD_SUCCESSFUL = 3
+    DOWNLOAD_ERROR = 4
 
 
 class CommandFinished(Exception):
+    pass
+
+
+class CommandInvalid(Exception):
     pass
 
 

@@ -51,9 +51,9 @@ class StepManager:
 
     def get_reading_steps(self):
         return self._steps['raw_data_reader'] +\
-            self._steps['lastrecv_timestamp_updater'] +\
             self._steps['raw_data_normalizer'] +\
-            self._steps['heartbeat_receiver'] +\
+            self._steps['heartbeat_receiver'] + \
+            self._steps['lastrecv_timestamp_updater'] + \
             self._steps['packet_dispatcher']
 
     def get_writing_steps(self):
