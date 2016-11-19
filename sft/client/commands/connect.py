@@ -35,7 +35,7 @@ class Connect(ClientCommandBase):
 
         if data and get_error_code(data) == ErrorIds.SUCCESSFUL:
             self.session_instance.activate_session(self._client_uuid)
-            LOG.info("Created new session: {}".format(str(self.session_instance)))
+            LOG.debug("Created new session: {}".format(str(self.session_instance)))
             raise CommandFinished
 
     def generate_data(self):
