@@ -47,4 +47,7 @@ class CommandDispatcherBase(cmd.Cmd):
 
     def do_exit(self, line):
         """Exit client."""
-        raise KeyboardInterrupt
+        try:
+            self.do_close('')
+        except AttributeError:
+            raise KeyboardInterrupt

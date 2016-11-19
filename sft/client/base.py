@@ -1,6 +1,7 @@
 import logging
 import abc
 
+from sft.common.commands.base import ProgramFinished
 from sft.common.config import Config
 
 from prompt_toolkit.shortcuts import prompt, create_eventloop
@@ -29,6 +30,8 @@ class ClientBase(metaclass=abc.ABCMeta):
             while True:
                 self._prompt_loop()
         except KeyboardInterrupt as e:
+            pass
+        except ProgramFinished as e:
             pass
         finally:
             self._terminate()

@@ -1,6 +1,7 @@
 import logging
 import abc
 
+from sft.common.commands.base import ProgramFinished
 from sft.common.config import Config
 
 
@@ -19,6 +20,8 @@ class ServerBase(metaclass=abc.ABCMeta):
             LOG.debug('Server loop started')
             while True:
                 self._main_loop()
+        except ProgramFinished as e:
+            pass
         except KeyboardInterrupt as e:
             pass
         finally:

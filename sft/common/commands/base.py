@@ -26,6 +26,12 @@ class CommandFinished(Exception):
     pass
 
 
+class ProgramFinished(Exception):
+    def __init__(self, state, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.state = state
+
+
 class CommandBase(metaclass=abc.ABCMeta):
     """Base class for all sft commands."""
     def __init__(self, *args, **kwargs):
