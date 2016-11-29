@@ -21,7 +21,7 @@ class CloseCommand(ServerCommandBase):
         return CommandIds.CLOSE_COMMAND_ID
 
     def _initialize(self, first_packet_data):
-        LOG.debug('CloseCommand instance created.')
+        # LOG.debug('CloseCommand instance created.')
 
         self._uuid = get_payload(first_packet_data)
         self._client_address = SessionManager().delete_session_by_uuid(self._uuid)

@@ -11,7 +11,7 @@ LOG = logging.getLogger(__name__)
 class CommandFactory(metaclass=Singleton):
     def __init__(self):
         super().__init__()
-        LOG.debug('Command factory created. Loaded commands: %r' % self._commands_by_id)
+        # LOG.debug('Command factory created. Loaded commands: %r' % self._commands_by_id)
 
     @classmethod
     def init(cls, commands):

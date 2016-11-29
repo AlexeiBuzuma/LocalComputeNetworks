@@ -14,7 +14,8 @@ class DataNormalizerBase(metaclass=abc.ABCMeta):
 
 class DataNormalizer(DataNormalizerBase):
     def normalize(self, data):
-        LOG.debug('std raw_data_normalizer step')
+        # LOG.debug('std raw_data_normalizer step')
+        pass
 
 
 raw_data_normalizer = DataNormalizer().normalize

@@ -14,7 +14,7 @@ def packet_dispatcher(data):
        :param data: [(client_addr, packet_payload), ...]
        :return []
     """
-    LOG.debug('std packet_dispatcher step')
+    # LOG.debug('std packet_dispatcher step')
 
     for client__address, data in data:
         session = _session_manager.get_session_by_address(client__address)

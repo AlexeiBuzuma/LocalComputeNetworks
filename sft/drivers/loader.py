@@ -27,4 +27,4 @@ def get_protocol_driver(protocol=None):
         return UDPDriver()
     else:
         raise RuntimeError('Unknown protocol specified')
-    LOG.debug('%s driver loaded', protocol)
+    # LOG.debug('%s driver loaded', protocol)

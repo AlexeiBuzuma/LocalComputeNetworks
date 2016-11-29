@@ -20,7 +20,7 @@ def heartbeat_receiver(data):
        :param data: [(client_addr, pckt_payload), ... ]
        :return: [(client_addr, pckt_payload), ... ]
     """
-    LOG.debug('std heartbeat_receiver step')
+    # LOG.debug('std heartbeat_receiver step')
     out_data = []
 
     for chunk in data:

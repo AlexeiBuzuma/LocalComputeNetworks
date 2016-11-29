@@ -15,8 +15,9 @@ class SampleCommand(ServerCommandBase):
         return CommandIds.SAMPLE_COMMAND_ID
 
     def _initialize(self, first_packet_data):
-        LOG.debug('SampleCommand instance created. '
-                  'First packet: %r', first_packet_data)
+        # LOG.debug('SampleCommand instance created. '
+        #           'First packet: %r', first_packet_data)
+        pass
 
     def receive_data(self, data):
         raise CommandFinished

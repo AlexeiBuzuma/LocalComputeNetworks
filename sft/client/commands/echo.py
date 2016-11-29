@@ -38,8 +38,8 @@ class EchoCommand(ClientCommandBase):
         self._reading_started = False
         self._packets_left_to_read = 0
 
-        LOG.debug('EchoCommand instance created. '
-                 'Arguments line given: %r', args_line)
+        # LOG.debug('EchoCommand instance created. '
+        #          'Arguments line given: %r', args_line)
 
     def receive_data(self, data):
         if not self._write_finished:
@@ -53,11 +53,11 @@ class EchoCommand(ClientCommandBase):
             self._packets_left_to_read = command_size // _packet_size + (1 if command_size % _packet_size > 0 else 0)
 
         self._data.append(data)
-        LOG.debug('EchoCommand: reading %r' % data)
+        # LOG.debug('EchoCommand: reading %r' % data)
         self._packets_left_to_read -= 1
 
         if self._packets_left_to_read == 0:
-            LOG.debug('EchoCommand: reading finished')
+            # LOG.debug('EchoCommand: reading finished')
             self._data[0] = self._data[0][get_header_size():]
             self._data[-1] = self._data[-1][:_packet_size - self._ending_zeros_amount - get_header_size()]
             print(b''.join(self._data).decode('utf-8'))
@@ -70,8 +70,8 @@ class EchoCommand(ClientCommandBase):
         data_len = len(self._data)
         if data_len > 0:
             data = self._data.pop(0)
-            LOG.debug('EchoCommand: sending %r' % data)
+            # LOG.debug('EchoCommand: sending %r' % data)
             if data_len == 1:
                 self._write_finished = True
-                LOG.debug('EchoCommand: sending finished')
+                # LOG.debug('EchoCommand: sending finished')
             return data

@@ -13,7 +13,7 @@ def lastrecv_timestamp_updater(data):
 
        Mustn't change the data, just pass it through.
     """
-    LOG.debug('std lastrecv_timestamp_updater step')
+    # LOG.debug('std lastrecv_timestamp_updater step')
 
     for client_addr, _ in data:
         session = _session_manager.get_session_by_address(

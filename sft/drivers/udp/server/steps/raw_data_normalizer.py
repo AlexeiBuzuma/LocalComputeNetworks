@@ -18,7 +18,7 @@ class UDPNormalizer(DataNormalizerBase):
            :param data: [(client_addr, raw_data), ... ]
            :return: [(client_addr, pckt_payload), ... ]
         """
-        LOG.debug('udp raw_data_normalizer step')
+        # LOG.debug('udp raw_data_normalizer step')
 
         # ToDo: Should contain functionality for QoS.
 

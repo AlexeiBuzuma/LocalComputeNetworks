@@ -17,7 +17,7 @@ class ServerBase(metaclass=abc.ABCMeta):
     def run(self):
         self._initialize()
         try:
-            LOG.debug('Server loop started')
+            # LOG.debug('Server loop started')
             while True:
                 self._main_loop()
         except ProgramFinished as e:
@@ -28,11 +28,13 @@ class ServerBase(metaclass=abc.ABCMeta):
             self._terminate()
 
     def _initialize(self):
-        LOG.debug('Initializing server')
+        # LOG.debug('Initializing server')
+        pass
 
     @abc.abstractmethod
     def _main_loop(self):
         pass
 
     def _terminate(self):
-        LOG.debug('Terminating server')
+        # LOG.debug('Terminating server')
+        pass

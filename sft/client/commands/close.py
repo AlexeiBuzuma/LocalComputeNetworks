@@ -29,7 +29,7 @@ class CloseCommand(ClientCommandBase):
 
     def _initialize(self, args_line):
         super()._initialize(args_line)
-        LOG.debug('CloseCommand instance created.')
+        # LOG.debug('CloseCommand instance created.')
 
         self._send_request = True
         self._finish = False

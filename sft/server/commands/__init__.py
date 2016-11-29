@@ -20,7 +20,7 @@ def load_commands():
         except AttributeError as e:
             pass
     log_info = {commands[command].get_command_id(): command for command in commands}
-    LOG.debug('Loaded commands: %r', log_info)
+    # LOG.debug('Loaded commands: %r', log_info)
     return {command.get_command_id(): command for command in commands.values()}
 
 

@@ -1,6 +1,7 @@
 import logging
 import argparse
 import shlex
+import time
 
 from .base import ClientCommandBase
 from sft.common.config import Config
@@ -34,13 +35,14 @@ class Download(ClientCommandBase):
         return CommandIds.DOWNLOAD_COMMAND_ID
 
     def _initialize(self, first_packet_data):
+        self._start_time = time.time()
         try:
             args = _parse_args(first_packet_data)
         except SystemExit as e:
             raise CommandInvalid(str(e))
 
         self._server_file_path = args.file
-        self._client_file_path = "/home/cartman/file_to_save"
+        self._client_file_path = "/home/yury/file_to_save"
         self._client_file_descriptor = open(self._client_file_path, "wb")
 
         self._server_file_size = None
@@ -84,6 +86,7 @@ class Download(ClientCommandBase):
         if self._raise_finished:
             self._client_file_descriptor.close()
             print("Download finished")
+            print('time spent: %4fs' % (time.time() - self._start_time))
             raise CommandFinished
 
         if self._send_approve:

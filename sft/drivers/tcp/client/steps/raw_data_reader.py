@@ -28,7 +28,7 @@ def raw_data_reader(dummy_arg):
        :param socket_list: List whith only one socket for reading data
        :return: [(server_addr, data), ]
     """
-    LOG.debug('Client tcp raw_data_reader step')
+    # LOG.debug('Client tcp raw_data_reader step')
 
     sockets = _socket_manager.get_readable_sockets()
     raw_data = []

@@ -22,8 +22,8 @@ class Connect(ServerCommandBase):
         return CommandIds.CONNECT_COMMAND_ID
 
     def _initialize(self, session_instance):
-        LOG.debug('Connect command instance created. '
-                  'Session_instance: %r', session_instance)
+        # LOG.debug('Connect command instance created. '
+        #           'Session_instance: %r', session_instance)
         self.session_instance = session_instance
 
     def receive_data(self, data):

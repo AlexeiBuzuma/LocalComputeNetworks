@@ -26,7 +26,7 @@ class ClientBase(metaclass=abc.ABCMeta):
     def run(self):
         self._initialize()
         try:
-            LOG.debug('Client loop started')
+            # LOG.debug('Client loop started')
             while True:
                 self._prompt_loop()
         except KeyboardInterrupt as e:
@@ -51,11 +51,13 @@ class ClientBase(metaclass=abc.ABCMeta):
             self._main_loop()
 
     def _initialize(self):
-        LOG.debug('Initializing client')
+        # LOG.debug('Initializing client')
+        pass
 
     @abc.abstractmethod
     def _main_loop(self):
         pass
 
     def _terminate(self):
-        LOG.debug('Terminating client')
+        # LOG.debug('Terminating client')
+        pass

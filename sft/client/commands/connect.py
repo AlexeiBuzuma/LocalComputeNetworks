@@ -27,15 +27,15 @@ class Connect(ClientCommandBase):
         self._client_uuid = None
         self._generate_next = True
         self.session_instance = session_instance
-        LOG.debug('Connect command instance created. '
-                  'Session_instance: %r', session_instance)
+        # LOG.debug('Connect command instance created. '
+        #           'Session_instance: %r', session_instance)
 
     def receive_data(self, data):
         LOG.info('Connected to %s:%d' % self.session_instance.client_address)
 
         if data and get_error_code(data) == ErrorIds.SUCCESSFUL:
             self.session_instance.activate_session(self._client_uuid)
-            LOG.debug("Created new session: {}".format(str(self.session_instance)))
+            # LOG.debug("Created new session: {}".format(str(self.session_instance)))
             raise CommandFinished
 
     def generate_data(self):

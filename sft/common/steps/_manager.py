@@ -24,10 +24,10 @@ class StepManager:
         self._load_role_steps()
         self._load_driver_steps()
 
-        LOG.debug('Selection steps: %r', self.get_selection_steps())
-        LOG.debug('Reading steps: %r', self.get_reading_steps())
-        LOG.debug('Writing steps: %r', self.get_writing_steps())
-        LOG.debug('State_check steps: %r', self.get_state_check_steps())
+        # LOG.debug('Selection steps: %r', self.get_selection_steps())
+        # LOG.debug('Reading steps: %r', self.get_reading_steps())
+        # LOG.debug('Writing steps: %r', self.get_writing_steps())
+        # LOG.debug('State_check steps: %r', self.get_state_check_steps())
 
     def _load_default_steps(self):
         self._steps.update(_default_steps)

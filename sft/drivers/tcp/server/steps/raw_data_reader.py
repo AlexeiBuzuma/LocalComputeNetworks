@@ -25,7 +25,7 @@ def raw_data_reader(dummy_arg):
        :param socket_list: List of sockets objects
        :return: [(client_address, data), (client_address, data), ...]
     """
-    LOG.debug('tcp raw_data_reader step')
+    # LOG.debug('tcp raw_data_reader step')
 
     service_socket = _socket_manager.get_server_socket()
     sockets = _socket_manager.get_readable_sockets()

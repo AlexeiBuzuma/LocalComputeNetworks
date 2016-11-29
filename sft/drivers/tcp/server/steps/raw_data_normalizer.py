@@ -18,7 +18,7 @@ class TCPNormalizer(DataNormalizerBase):
            :param data: [(client_addr, raw_data), (client_addr, raw_data) ... ]
            :return: [(client_addr, pckt_payload), ... ]
         """
-        LOG.debug('Server tcp raw_data_normalizer step')
+        # LOG.debug('Server tcp raw_data_normalizer step')
         return self._accumulator.accumulate_data(data)
 
 

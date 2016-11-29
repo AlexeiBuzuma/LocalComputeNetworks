@@ -21,7 +21,7 @@ LOG = logging.getLogger(__name__)
 steps = {
     'socket_selector': (socket_selector, ),
 
-    'raw_data_reader': (lambda x: LOG.debug('std raw_data_reader step'), ),
+    'raw_data_reader': (lambda x: x),  # LOG.debug('std raw_data_reader step'), ),
     'lastrecv_timestamp_updater': (lastrecv_timestamp_updater, ),
     'raw_data_normalizer': (raw_data_normalizer, ),
     'heartbeat_receiver': (heartbeat_receiver, ),
@@ -29,7 +29,7 @@ steps = {
 
     'payload_collector': (payload_collector, ),
     'lastsent_timestamp_updater': (lastsent_timestamp_updater, ),
-    'packet_data_writer': (lambda x: LOG.debug('std packet_data_writer step'), ),
+    'packet_data_writer': (lambda x: x),  # LOG.debug('std packet_data_writer step'), ),
 
-    'state_check': (lambda x: LOG.debug('std state_check step'), ),
+    'state_check': (lambda x: x),  # LOG.debug('std state_check step'), ),
 }
