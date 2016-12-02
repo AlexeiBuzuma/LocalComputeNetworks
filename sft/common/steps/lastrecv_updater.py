@@ -16,8 +16,7 @@ def lastrecv_timestamp_updater(data):
     # LOG.debug('std lastrecv_timestamp_updater step')
 
     for client_addr, _ in data:
-        session = _session_manager.get_session_by_address(
-            client_addr, create_new=False)
+        session = _session_manager.get_session(client_address=client_addr, create_new=False)
         # if session is None:
         #     print("Session is None!")
         # else:

@@ -24,7 +24,7 @@ def heartbeat_receiver(data):
     out_data = []
 
     for chunk in data:
-        session = _session_manager.get_session_by_address(chunk[0])
+        session = _session_manager.get_session(client_address=chunk[0])
         if time() - session.last_recv_time >= _heartbit_check_interval:
             if get_command_id(chunk[1]) != CommandIds.HEARTBEAT_COMMAND_ID:
                 out_data.append(chunk)

@@ -24,7 +24,7 @@ class CloseCommand(ServerCommandBase):
         # LOG.debug('CloseCommand instance created.')
 
         self._uuid = get_payload(first_packet_data)
-        self._client_address = SessionManager().delete_session_by_uuid(self._uuid)
+        self._client_address = SessionManager().delete_session(uuid=self._uuid)
         if self._client_address is not None:
             SocketManager().delete_socket_by_address( self._client_address)
         self._finished = True

@@ -2,10 +2,12 @@ import logging
 
 from sft.common.commands.base import ServerCommandBase, CommandFinished, CommandIds, ErrorIds
 from sft.common.utils.packets import get_payload, generate_packet, get_command_id
+from sft.common.sessions.session_manager import SessionManager
 
 LOG = logging.getLogger(__name__)
 
 __all__ = ['Connect']
+_session_manager = SessionManager()
 
 
 class Connect(ServerCommandBase):
@@ -32,7 +34,7 @@ class Connect(ServerCommandBase):
             LOG.warning('Unexpected command packet arrived!')
             raise CommandFinished
         uuid = get_payload(data)
-        self.session_instance.activate_session(uuid)
+        _session_manager.activate_session(session=self.session_instance, uuid=uuid)
         LOG.info('Client %s:%d: logical connection established' % self.session_instance.client_address)
         LOG.info("Created new session: {}".format(str(self.session_instance)))
         self._send_response_flag = True

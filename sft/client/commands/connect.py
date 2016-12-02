@@ -4,11 +4,13 @@ import uuid
 from sft.common.config import Config
 from sft.common.commands.base import CommandFinished, CommandIds, ErrorIds
 from .base import ClientCommandBase
-from sft.common.utils.packets import generate_packet, get_error_code, get_payload
+from sft.common.utils.packets import generate_packet, get_error_code
+from sft.common.sessions.session_manager import SessionManager
 
 
 LOG = logging.getLogger(__name__)
 _config = Config()
+_session_manager = SessionManager()
 
 __all__ = ['Connect']
 
@@ -34,7 +36,7 @@ class Connect(ClientCommandBase):
         LOG.info('Connected to %s:%d' % self.session_instance.client_address)
 
         if data and get_error_code(data) == ErrorIds.SUCCESSFUL:
-            self.session_instance.activate_session(self._client_uuid)
+            _session_manager.activate_session(session=self.session_instance, uuid=self._client_uuid)
             # LOG.debug("Created new session: {}".format(str(self.session_instance)))
             raise CommandFinished
 

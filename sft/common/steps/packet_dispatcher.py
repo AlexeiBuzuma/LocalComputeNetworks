@@ -17,5 +17,5 @@ def packet_dispatcher(data):
     # LOG.debug('std packet_dispatcher step')
 
     for client__address, data in data:
-        session = _session_manager.get_session_by_address(client__address)
+        session = _session_manager.get_session(client_address=client__address)
         session.command_receive_data(data)
