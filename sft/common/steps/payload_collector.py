@@ -7,12 +7,12 @@ from sft.common.socket_manager import SocketManager
 LOG = logging.getLogger(__name__)
 
 _get_session = SessionManager().get_session
-_get_writable_sockets = SocketManager().get_writable_sockets
+_socket_manager = SocketManager()
 
 
 def payload_collector(dummy_arg):
     data = []
-    for socket in _get_writable_sockets():
+    for socket in _socket_manager.writable:
         # ToDo: Rewrite payload collector to be appropriate for UDP
         # Slow for TCP and inappropriate for UDP
         client_address = socket.getpeername()

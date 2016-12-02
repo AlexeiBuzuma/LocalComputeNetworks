@@ -33,7 +33,7 @@ class Connect(ClientCommandBase):
         #           'Session_instance: %r', session_instance)
 
     def receive_data(self, data):
-        LOG.info('Connected to %s:%d' % self.session_instance.client_address)
+        LOG.info('Server %s:%d: logical connection established' % self.session_instance.client_address)
 
         if data and get_error_code(data) == ErrorIds.SUCCESSFUL:
             _session_manager.activate_session(session=self.session_instance, uuid=self._client_uuid)

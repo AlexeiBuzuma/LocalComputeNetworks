@@ -154,8 +154,9 @@ class SessionManager(metaclass=Singleton):
             if session.client_uuid:
                 self._sessions_by_uuid.pop(session.client_uuid)
             if session.client_address:
-                self._sessions_by_uuid.pop(session.client_address)
-        return session.client_address
+                self._sessions_by_address.pop(session.client_address)
+            return session.client_address
+        return None
 
     def activate_session(self, uuid, client_address=None, session=None):
         if session is None:
@@ -164,6 +165,7 @@ class SessionManager(metaclass=Singleton):
         session.activate_session(uuid)
         self._sessions[session_status.value].remove(session)
         self._sessions[session.status.value].append(session)
+        self._sessions_by_uuid[uuid] = session
         return session
 
     def deactivate_session(self, session=None, client_address=None, uuid=None):

@@ -1,7 +1,6 @@
 import logging
 
 from sft.client.base import ClientBase
-from sft.common.commands.base import ProgramFinished
 from sft.drivers.loader import load_protocol_driver
 from sft.common.steps import StepManager
 from sft.common.commands.factory import CommandFactory
@@ -35,8 +34,8 @@ class SFTClient(ClientBase):
 
         self._sock_manager = SocketManager()
         self._sock_manager.connect_to_server_socket(self._server_address)
-        self._host = self._sock_manager.get_server_socket().getsockname()
-        LOG.info('Clent connected to %s:%d' % self._server_address)
+        self._host = self._sock_manager.service_socket.getsockname()
+        LOG.info('Server %s:%d: physical connection established' % self._server_address)
 
     def _main_loop(self):
         self._sock_manager.update_selection()

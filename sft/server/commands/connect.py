@@ -36,7 +36,7 @@ class Connect(ServerCommandBase):
         uuid = get_payload(data)
         _session_manager.activate_session(session=self.session_instance, uuid=uuid)
         LOG.info('Client %s:%d: logical connection established' % self.session_instance.client_address)
-        LOG.info("Created new session: {}".format(str(self.session_instance)))
+        # LOG.info("Created new session: {}".format(str(self.session_instance)))
         self._send_response_flag = True
 
     def generate_data(self):

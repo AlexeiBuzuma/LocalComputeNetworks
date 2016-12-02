@@ -19,7 +19,7 @@ def _handle_server_disconnection():
     session = SessionManager().get_all_not_inactive_sessions()[0]
     if session.status == SessionStatus.wait_for_close:
         raise ProgramFinished(ErrorIds.SUCCESSFUL)
-    raise Exception("Server socket closed")
+    raise Exception("Server socket closed unexpectedly")
 
 
 def raw_data_reader(dummy_arg):
@@ -28,9 +28,8 @@ def raw_data_reader(dummy_arg):
        :param socket_list: List whith only one socket for reading data
        :return: [(server_addr, data), ]
     """
-    # LOG.debug('Client tcp raw_data_reader step')
 
-    sockets = _socket_manager.get_readable_sockets()
+    sockets = _socket_manager.readable
     raw_data = []
 
     for sock in sockets:
