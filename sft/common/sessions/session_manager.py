@@ -166,7 +166,7 @@ class SessionManager(metaclass=Singleton):
         self._sessions[session.status.value].append(session)
         return session
 
-    def deactivate_session(self, client_address=None, uuid=None, session=None):
+    def deactivate_session(self, session=None, client_address=None, uuid=None):
         """Set inactive status for session, if session exists."""
         if session is None:
             session = self.get_session(client_address=client_address, uuid=uuid, create_new=False)
