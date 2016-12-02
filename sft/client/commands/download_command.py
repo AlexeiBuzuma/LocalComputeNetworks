@@ -2,6 +2,7 @@ import logging
 import argparse
 import shlex
 import time
+import os
 
 from .base import ClientCommandBase
 from sft.common.config import Config
@@ -10,16 +11,22 @@ from sft.common.utils.packets import (generate_packet, generate_header, get_payl
 get_payload_size, get_header_size, get_error_code)
 
 
-
 LOG = logging.getLogger(__name__)
 _config = Config()
 
 __all__ = ['Download']
 
 
+# Create default download directory
+STORAGE_PATH = os.path.expanduser(os.path.join("~", "sft-download-dir"))
+if not os.path.exists(STORAGE_PATH):
+    os.mkdir(STORAGE_PATH)
+
+
 def _parse_args(line):
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", dest="file", help="Path to file for download", required=True)
+    parser.add_argument("-d", dest="dest_path", help="Path to save")
 
     return parser.parse_args(shlex.split(line))
 
@@ -41,8 +48,10 @@ class Download(ClientCommandBase):
         except SystemExit as e:
             raise CommandInvalid(str(e))
 
+        self._create_default_download_dir()
+
         self._server_file_path = args.file
-        self._client_file_path = "/home/yury/file_to_save"
+        self._client_file_path = os.path.join(STORAGE_PATH, args.file) if args.dest_path is None else args.dest_path
         self._client_file_descriptor = open(self._client_file_path, "wb")
 
         self._server_file_size = None
@@ -53,6 +62,11 @@ class Download(ClientCommandBase):
         self._send_approve = False
         self._raise_finished = False
         # self._header = generate_header(CommandIds.DOWNLOAD_COMMAND_ID, 0, len(self._file_path))
+
+    @staticmethod
+    def _create_default_download_dir():
+        if not os.path.exists(STORAGE_PATH):
+            os.mkdir(STORAGE_PATH)
 
     def receive_data(self, data):
 
