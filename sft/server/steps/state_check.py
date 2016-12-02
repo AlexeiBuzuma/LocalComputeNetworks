@@ -2,22 +2,24 @@ import logging
 import time
 
 from sft.common.config import Config
-from sft.common.sessions.session_manager import SessionManager, SessionStatus
+from sft.common.sessions.session_manager import SessionManager
+
 
 LOG = logging.getLogger(__name__)
-_config = Config()
+_get_not_inactive_sessions = SessionManager().get_all_not_inactive_sessions
+_deactivate_session = SessionManager().deactivate_session
+_conn_break_timeout = Config().connection_break_timeout
 
 
-def server_state_check(data):
-    """ Check last receive time in all active sessions. If time is expired, session will be deactivated.
+def server_state_check(dummy_arg):
+    """Check last receive time in all active sessions.
+
+       If time is expired, session will be deactivated.
     """
-
-    # LOG.debug("Server state check")
-
-    session_manager = SessionManager()
-    active_sessions = session_manager.get_all_not_inactive_sessions()
+    # ToDo: Do sth with exceptional sockets
+    active_sessions = _get_not_inactive_sessions()
+    cur_time = time.time()
 
     for session in active_sessions:
-        sec_from_last_recv = time.time() - session.last_recv_time
-        if sec_from_last_recv > _config.connection_break_timeout:
-            session.status = SessionStatus.inactive
+        if cur_time - session.last_recv_time > _conn_break_timeout:
+            _deactivate_session(session)

@@ -14,7 +14,7 @@ _buffer_size = Config().tcp_buffer_size
 
 
 def _handle_client_disconnection(client_address):
-    _session_manager.deactivate_session_by_address(client_address)
+    _session_manager.deactivate_session(client_address=client_address)
     _socket_manager.delete_socket_by_address(client_address)
     LOG.info('Client %s:%d: physical connection closed' % client_address)
 
@@ -25,10 +25,9 @@ def raw_data_reader(dummy_arg):
        :param socket_list: List of sockets objects
        :return: [(client_address, data), (client_address, data), ...]
     """
-    # LOG.debug('tcp raw_data_reader step')
 
-    service_socket = _socket_manager.get_server_socket()
-    sockets = _socket_manager.get_readable_sockets()
+    service_socket = _socket_manager.service_socket
+    sockets = _socket_manager.readable
     raw_data = []
 
     for sock in sockets:

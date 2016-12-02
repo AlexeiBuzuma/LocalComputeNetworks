@@ -41,7 +41,7 @@ class SFTServer(ServerBase):
 
         self._sock_manager = SocketManager()
         self._sock_manager.bind_server_socket(self._host)
-        self._host = self._sock_manager.get_server_socket().getsockname()
+        self._host = self._sock_manager.service_socket.getsockname()
         LOG.info('Starting server at %s:%d' % self._host)
 
     def _main_loop(self):

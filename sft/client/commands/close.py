@@ -29,10 +29,9 @@ class CloseCommand(ClientCommandBase):
 
     def _initialize(self, args_line):
         super()._initialize(args_line)
-        # LOG.debug('CloseCommand instance created.')
-
         self._send_request = True
         self._finish = False
+
         session = SessionManager().get_all_not_inactive_sessions()[0]
         client_uuid = session.client_uuid
         self._request = generate_packet(self.get_command_id(), ErrorIds.SUCCESSFUL, client_uuid)
