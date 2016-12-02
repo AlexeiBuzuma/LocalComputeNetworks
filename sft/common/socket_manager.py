@@ -46,9 +46,6 @@ class SocketManager(metaclass=Singleton):
         sockets = self._sockets.values()
         self._readable, self._writable, self._exceptional =\
             select.select(sockets, sockets, sockets)
-        # LOG.debug('R: %r' % self._readable)
-        # LOG.debug('W: %r' % self._writable)
-        # LOG.debug('E: %r' % self._exceptional)
 
     def get_readable_sockets(self):
         return self._readable
