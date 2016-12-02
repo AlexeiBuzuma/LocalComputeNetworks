@@ -31,6 +31,34 @@ def _parse_args(line):
     return parser.parse_args(shlex.split(line))
 
 
+class FileWriter:
+    BUFFER_ITEMS_SIZE = 50
+
+    def __init__(self, path):
+        self._path = path
+        self._file_descriptor = open(self._path, "wb")
+
+        self._current_index = 0
+        self._buffer = bytearray()
+
+    def write(self, data):
+        self._current_index += 1
+        self._buffer += data
+
+        if self._current_index == self.BUFFER_ITEMS_SIZE:
+            self.stash()
+
+    def stash(self):
+        if self._current_index != 0:
+            self._file_descriptor.write(self._buffer)
+            self._buffer = bytearray()
+            self._current_index = 0
+
+    def close(self):
+        self.stash()
+        self._file_descriptor.close()
+
+
 class Download(ClientCommandBase):
     """Download command help"""
     @staticmethod
@@ -52,7 +80,8 @@ class Download(ClientCommandBase):
 
         self._server_file_path = args.file
         self._client_file_path = os.path.join(STORAGE_PATH, args.file) if args.dest_path is None else args.dest_path
-        self._client_file_descriptor = open(self._client_file_path, "wb")
+
+        self._file_writer = FileWriter(self._client_file_path)
 
         self._server_file_size = None
         self._readed_bytes = 0
@@ -61,7 +90,6 @@ class Download(ClientCommandBase):
         self._first_recived_package = True
         self._send_approve = False
         self._raise_finished = False
-        # self._header = generate_header(CommandIds.DOWNLOAD_COMMAND_ID, 0, len(self._file_path))
 
     @staticmethod
     def _create_default_download_dir():
@@ -79,38 +107,33 @@ class Download(ClientCommandBase):
             self._file_size = get_payload_size(data)
 
             if self._file_size + get_header_size() <= _config.package_size:
-                self._client_file_descriptor.write(data[get_header_size():self._file_size+get_header_size()])
+                self._file_writer.write(data[get_header_size():self._file_size+get_header_size()])
                 self._send_approve = True
             else:
-                self._client_file_descriptor.write(data[get_header_size():])
+                self._file_writer.write(data[get_header_size():])
                 self._readed_bytes += _config.package_size - get_header_size()
         else:
             if self._file_size - self._readed_bytes <= _config.package_size:
-                self._client_file_descriptor.write(data[:self._file_size - self._readed_bytes])
+                self._file_writer.write(data[:self._file_size - self._readed_bytes])
 
                 self._send_approve = True
             else:
-                self._client_file_descriptor.write(data)
+                self._file_writer.write(data)
                 self._readed_bytes += len(data)
-
-
-        # print("{}/{}".format(self._readed_bytes, self._file_size))
 
     def generate_data(self):
         if self._raise_finished:
-            self._client_file_descriptor.close()
+            self._file_writer.close()
             print("Download finished")
             print('time spent: %4fs' % (time.time() - self._start_time))
             raise CommandFinished
 
         if self._send_approve:
-            print("Generate package")
             self._raise_finished = True
 
             return generate_packet(CommandIds.DOWNLOAD_COMMAND_ID, ErrorIds.DOWNLOAD_SUCCESSFUL, "")
 
         if self._generate_request_package:
-            print("Generate package")
             self._generate_request_package = False
             return generate_packet(CommandIds.DOWNLOAD_COMMAND_ID, 0, self._server_file_path)
         else:
