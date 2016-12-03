@@ -6,6 +6,7 @@ from sft.common.commands.base import CommandFinished, CommandIds, ErrorIds
 from .base import ClientCommandBase
 from sft.common.utils.packets import generate_packet, get_error_code
 from sft.common.sessions.session_manager import SessionManager
+from sft.common.utils.storage import save_client_data, load_client_data
 
 
 LOG = logging.getLogger(__name__)
@@ -26,6 +27,7 @@ class Connect(ClientCommandBase):
 
     def _initialize(self, session_instance):
         super()._initialize(None)
+        print(load_client_data())
         self._client_uuid = None
         self._generate_next = True
         self.session_instance = session_instance
@@ -38,6 +40,8 @@ class Connect(ClientCommandBase):
         if data and get_error_code(data) == ErrorIds.SUCCESSFUL:
             _session_manager.activate_session(session=self.session_instance, uuid=self._client_uuid)
             # LOG.debug("Created new session: {}".format(str(self.session_instance)))
+            client_data = {'uuid': self._client_uuid}
+            save_client_data(client_data)
             raise CommandFinished
 
     def generate_data(self):
