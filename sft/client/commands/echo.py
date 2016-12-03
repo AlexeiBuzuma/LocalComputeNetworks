@@ -37,9 +37,7 @@ class EchoCommand(ClientCommandBase):
         self._write_finished = False
         self._reading_started = False
         self._packets_left_to_read = 0
-
-        # LOG.debug('EchoCommand instance created. '
-        #          'Arguments line given: %r', args_line)
+        self._one_packet_command = False
 
     def receive_data(self, data):
         if not self._write_finished:
@@ -49,18 +47,21 @@ class EchoCommand(ClientCommandBase):
             self._reading_started = True
             ps = get_payload_size(data)
             command_size = get_header_size() + ps
-            self._ending_zeros_amount = _packet_size - (get_header_size() + ps) % _packet_size
+            self._ending_zeros_amount = _packet_size - command_size % _packet_size
             self._packets_left_to_read = command_size // _packet_size + (1 if command_size % _packet_size > 0 else 0)
+            if self._packets_left_to_read == 1:
+                self._one_packet_command = True
 
         self._data.append(data)
-        # LOG.debug('EchoCommand: reading %r' % data)
         self._packets_left_to_read -= 1
 
         if self._packets_left_to_read == 0:
-            # LOG.debug('EchoCommand: reading finished')
             self._data[0] = self._data[0][get_header_size():]
-            self._data[-1] = self._data[-1][:_packet_size - self._ending_zeros_amount - get_header_size()]
-            print(b''.join(self._data).decode('utf-8'))
+            ending_zeros_amount = self._ending_zeros_amount
+            if self._one_packet_command:
+                ending_zeros_amount += get_header_size()
+            self._data[-1] = self._data[-1][:_packet_size - ending_zeros_amount]
+            print('===>', b''.join(self._data).decode('utf-8'))
             raise CommandFinished
 
     def generate_data(self):
@@ -70,8 +71,6 @@ class EchoCommand(ClientCommandBase):
         data_len = len(self._data)
         if data_len > 0:
             data = self._data.pop(0)
-            # LOG.debug('EchoCommand: sending %r' % data)
             if data_len == 1:
                 self._write_finished = True
-                # LOG.debug('EchoCommand: sending finished')
             return data
