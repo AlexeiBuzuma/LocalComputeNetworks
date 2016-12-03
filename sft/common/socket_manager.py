@@ -45,7 +45,7 @@ class SocketManager(metaclass=Singleton):
     def update_selection(self):
         sockets = self._sockets_list
         self.readable, self.writable, self.exceptional =\
-            select.select(sockets, sockets, sockets)
+            select.select(sockets, sockets, sockets, 0.5)
 
     def bind_server_socket(self, address=None):
         if address is None:
