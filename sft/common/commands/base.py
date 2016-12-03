@@ -22,6 +22,7 @@ class ErrorIds(IntEnum):
     ERROR = 2
     DOWNLOAD_SUCCESSFUL = 3
     DOWNLOAD_ERROR = 4
+    CONNECT_SESSION_REACTIVATION = 5
 
 
 class CommandFinished(Exception):

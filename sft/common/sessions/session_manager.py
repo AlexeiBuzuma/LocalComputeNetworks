@@ -102,7 +102,6 @@ class SessionManager(metaclass=Singleton):
         self._sessions_by_address = {}
 
     def create_session(self, client_address, status=SessionStatus.wait_for_activation, uuid=None):
-        # ToDo: Inactive sessions must be activated when executing the same command as one in session.
         session = Session(client_address, status, uuid)
 
         self._sessions[session.status.value].append(session)
@@ -139,6 +138,10 @@ class SessionManager(metaclass=Singleton):
 
         return session
 
+    # def get_inactive_session(self, uuid):
+    #     for session in self._sessions[SessionStatus.inactive]:
+    #         if session.client_uuid = uuid
+
     def get_all_not_inactive_sessions(self):
         """Find and return sessions with not inactive status."""
         return self._not_inactive_sessions
@@ -158,9 +161,9 @@ class SessionManager(metaclass=Singleton):
             return session.client_address
         return None
 
-    def activate_session(self, uuid, client_address=None, session=None):
+    def activate_session(self, uuid, client_address=None, session=None, create_new=False):
         if session is None:
-            session = self.get_session(self, uuid, client_address)
+            session = self.get_session(self, uuid, client_address, create_new=create_new)
         session_status = session.status
         session.activate_session(uuid)
         self._sessions[session_status.value].remove(session)
