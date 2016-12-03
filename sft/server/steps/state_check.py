@@ -3,6 +3,7 @@ import time
 
 from sft.common.config import Config
 from sft.common.sessions.session_manager import SessionManager
+from sft.common.socket_manager import SocketManager
 
 
 LOG = logging.getLogger(__name__)
@@ -22,4 +23,8 @@ def server_state_check(dummy_arg):
 
     for session in active_sessions:
         if cur_time - session.last_recv_time > _conn_break_timeout:
+            LOG.warning("Client %s:%d: seems that physical connection is broken" % session.client_address)
             _deactivate_session(session)
+            LOG.warning("Client %s:%d: logical connection frozen" % session.client_address)
+            SocketManager().delete_socket_by_address(session.client_address)
+            LOG.warning("Client %s:%d: physical connection closed" % session.client_address)
