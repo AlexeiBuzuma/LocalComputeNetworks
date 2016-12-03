@@ -17,7 +17,11 @@ class SocketManager(metaclass=Singleton):
         self.readable = []
         self.writable = []
         self.exceptional = []
+        self.address_by_socket_id = {}
         self.service_socket = None
+
+    def get_address_by_socket(self, socket_obj):
+        return self.address_by_socket_id.get(id(socket_obj))
 
     def get_socket_by_address(self, address):
         if address in self._sockets:
@@ -32,11 +36,13 @@ class SocketManager(metaclass=Singleton):
             address = sock.getsockname()
         self._sockets[address] = sock
         self._sockets_list.append(sock)
+        self.address_by_socket_id[id(sock)] = address
 
     def delete_socket_by_address(self, address):
         sock = self._sockets.pop(address)
         if sock is not None:
             self._sockets_list.remove(sock)
+            self.address_by_socket_id.pop(id(sock))
             for sock_list in (self.readable, self.writable, self.exceptional):
                 if sock in sock_list:
                     sock_list.remove(sock)
@@ -54,11 +60,13 @@ class SocketManager(metaclass=Singleton):
         self._sockets['service_socket'] = self.service_socket
         self._sockets_list.append(self.service_socket)
         self.service_socket.listen(10)
+        self.address_by_socket_id[id(self.service_socket)] = address
 
     def connect_to_server_socket(self, address):
         self.service_socket = self._connect_to_socket(address)
         self._sockets['service_socket'] = self.service_socket
         self._sockets_list.append(self.service_socket)
+        self.address_by_socket_id[id(self.service_socket)] = address
 
     def clear(self):
         for sock in self._sockets.values():
@@ -68,6 +76,7 @@ class SocketManager(metaclass=Singleton):
         self.readable.clear()
         self.exceptional.clear()
         self._sockets_list.clear()
+        self.address_by_socket_id.clear()
 
     @staticmethod
     def _connect_to_socket(address):

@@ -112,7 +112,7 @@ class Download(ClientCommandBase):
 
     def _write_client_data(self):
         client_data = dict(
-            client_uuid=self._current_sesion.client_uuid,
+            uuid=self._current_sesion.client_uuid,
             server_file_path=self._server_file_path,
             client_file_path=self._client_file_path,
             file_size=self._file_size,

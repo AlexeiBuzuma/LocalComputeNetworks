@@ -16,7 +16,7 @@ class Connect(ServerCommandBase):
         self._initialize(session_instance)
         self._send_response_flag = None
         self._session_reactivated = False
-        self._raise_command_finished = None
+        self._raise_command_finished = False
 
     @staticmethod
     def get_command_id():
@@ -31,34 +31,27 @@ class Connect(ServerCommandBase):
                 LOG.warning('Client %s:%d: Unexpected command packet arrived!' % self.session_instance.client_address)
                 return
 
+            self._send_response_flag = True
             client_uuid = get_payload(data)
             session = _session_manager.get_session(client_uuid, create_new=False)
-            self._send_response_flag = True
             if session is not None:
-                self._reactivated_session = session
-                # activate connect session with dummy uuid
-                self._dummy_uuid = str(uuid.uuid4())
-                _session_manager.activate_session(session=self.session_instance, uuid=self._dummy_uuid)
-                # reactivate frozen session
-                _session_manager.activate_session(client_uuid, session=session)
                 self._session_reactivated = True
+                self._reactivated_session = session
+                _session_manager.delete_session(client_uuid)
                 return
             _session_manager.activate_session(session=self.session_instance, uuid=client_uuid)
-            LOG.info('Client %s:%d: logical connection established' % self.session_instance.client_address)
 
     def generate_data(self):
         if self._raise_command_finished:
-            if self._session_reactivated:
-                self._reactivated_session.client_address = self.session_instance.client_address
-                LOG.info('Client %s:%d: logical connection restored' % self.session_instance.client_address)
-                _session_manager.delete_session(self._dummy_uuid)
-            else:
-                raise CommandFinished
+            raise CommandFinished
 
         if self._send_response_flag:
             self._send_response_flag = False
-            self._raise_command_finished = True
             if self._session_reactivated:
+                self.session_instance.command = self._reactivated_session.command
+                LOG.info('Client %s:%d: logical connection restored' % self.session_instance.client_address)
                 return generate_packet(CommandIds.CONNECT_COMMAND_ID, ErrorIds.CONNECT_SESSION_REACTIVATION, "")
+            self._raise_command_finished = True
+            LOG.info('Client %s:%d: logical connection established' % self.session_instance.client_address)
             return generate_packet(CommandIds.CONNECT_COMMAND_ID, ErrorIds.SUCCESSFUL, "")
         return None
