@@ -31,7 +31,8 @@ def heartbeat_receiver(data):
         else:
             out_data.append(chunk)
 
+        session = _session_manager.get_session(client_address=chunk[0], create_new=False)
+        if session is not None:
+            session.update_recv_time()
+
     return out_data
-    # return list(filter(lambda x: get_command_id(x[1]) != CommandIds.HEARTBEAT_COMMAND_ID.value, data))
-    # else:
-    #     return data

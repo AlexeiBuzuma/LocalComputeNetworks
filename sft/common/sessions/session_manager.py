@@ -1,8 +1,7 @@
 """ This module contains functionality for managing sessions.
 """
 
-# ToDo: Session Reactivation
-
+import logging
 import time
 from enum import Enum
 
@@ -12,6 +11,8 @@ from sft.common.config import Config
 from sft.common.utils.common import Singleton
 from sft.common.utils.packets import get_heartbeat_payload
 
+
+LOG = logging.getLogger(__name__)
 _conf = Config()
 
 
