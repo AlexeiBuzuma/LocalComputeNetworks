@@ -15,7 +15,8 @@ def payload_collector(dummy_arg):
     for socket in _socket_manager.writable:
         # ToDo: Rewrite payload collector to be appropriate for UDP
         # Slow for TCP and inappropriate for UDP
-        client_address = socket.getpeername()
+        # client_address = socket.getpeername()
+        client_address = _socket_manager.address_by_socket_id[id(socket)]
         command_data = _get_session(client_address=client_address, create_new=True).command_generate_data()
         if command_data is not None:
             data.append((client_address, command_data))

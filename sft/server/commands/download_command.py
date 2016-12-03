@@ -25,6 +25,7 @@ class Download(ServerCommandBase):
         self._sended_bytes = 0
         self._generate_first_packet = True
         self._send_error = False
+        self._send_pointer_moved = False
         self._wait_for_approve = False
         self._raise_command_finished = False
 
@@ -46,15 +47,25 @@ class Download(ServerCommandBase):
         if self._raise_command_finished:
             raise CommandFinished
 
-        if get_error_code(data) == ErrorIds.DOWNLOAD_SUCCESSFUL:
+        error_code = get_error_code(data)
+        if error_code == ErrorIds.DOWNLOAD_SUCCESSFUL:
             self._file_descriptor.close()
 
             print("Download finished")
             raise CommandFinished
 
+        elif error_code == ErrorIds.DOWNLOAD_START_FROM:
+            start_from = int(get_payload(data))
+            self._file_descriptor.seek(start_from)
+            self._send_pointer_moved = True
+
     def generate_data(self):
         if self._wait_for_approve:
             return
+
+        if self._send_pointer_moved:
+            self._send_pointer_moved = False
+            return generate_packet(CommandIds.DOWNLOAD_COMMAND_ID, ErrorIds.DOWNLOAD_POINTER_MOVED, "")
 
         if self._raise_command_finished:
             raise CommandFinished

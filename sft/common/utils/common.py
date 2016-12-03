@@ -42,3 +42,11 @@ def import_submodules(package_name):
         name: importlib.import_module(package_name + '.' + name)
         for loader, name, is_pkg in pkgutil.walk_packages(package.__path__)
     }
+
+
+def is_socket_alive(socket):
+    try:
+        socket.getpeername()
+        return True
+    except Exception:
+        return False

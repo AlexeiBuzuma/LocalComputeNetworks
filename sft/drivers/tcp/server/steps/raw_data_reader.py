@@ -37,7 +37,7 @@ def raw_data_reader(dummy_arg):
             _session_manager.create_session(client_address)
             LOG.info('Client %s:%d: physical connection established' % client_address)
         else:
-            client_address = sock.getpeername()
+            client_address = _socket_manager.address_by_socket_id[id(sock)]
             try:
                 data = sock.recv(_buffer_size)
                 if data:
