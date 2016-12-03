@@ -11,4 +11,7 @@ _sock_manager = SocketManager()
 def packet_data_writer(packet_payloads):
     # LOG.debug('tcp packet_data_writer step')
     for address, payload in packet_payloads:
-        _sock_manager.get_socket_by_address(address).send(payload)
+        try:
+            _sock_manager.get_socket_by_address(address).send(payload)
+        except Exception:
+            pass

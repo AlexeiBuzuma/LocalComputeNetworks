@@ -14,7 +14,9 @@ _buffer_size = Config().tcp_buffer_size
 
 
 def _handle_client_disconnection(client_address):
+    LOG.warning("Client %s:%d: seems that physical connection is broken" % client_address)
     _session_manager.deactivate_session(client_address=client_address)
+    LOG.warning("Client %s:%d: logical connection frozen" % client_address)
     _socket_manager.delete_socket_by_address(client_address)
     LOG.info('Client %s:%d: physical connection closed' % client_address)
 

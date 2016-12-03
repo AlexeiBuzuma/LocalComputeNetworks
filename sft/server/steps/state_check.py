@@ -10,6 +10,7 @@ LOG = logging.getLogger(__name__)
 _get_not_inactive_sessions = SessionManager().get_all_not_inactive_sessions
 _deactivate_session = SessionManager().deactivate_session
 _conn_break_timeout = Config().connection_break_timeout
+_socket_manager = SocketManager()
 
 
 def server_state_check(dummy_arg):
@@ -26,5 +27,14 @@ def server_state_check(dummy_arg):
             LOG.warning("Client %s:%d: seems that physical connection is broken" % session.client_address)
             _deactivate_session(session)
             LOG.warning("Client %s:%d: logical connection frozen" % session.client_address)
-            SocketManager().delete_socket_by_address(session.client_address)
+            _socket_manager.delete_socket_by_address(session.client_address)
             LOG.warning("Client %s:%d: physical connection closed" % session.client_address)
+
+    for sock in _socket_manager.exceptional:
+        socket_address = _socket_manager.address_by_socket_id[id(sock)]
+        session = SessionManager.get_session(client_address=socket_address)
+        LOG.warning("Client %s:%d: seems that physical connection is broken" % session.client_address)
+        _deactivate_session(session)
+        LOG.warning("Client %s:%d: logical connection frozen" % session.client_address)
+        _socket_manager.delete_socket_by_address(session.client_address)
+        LOG.warning("Client %s:%d: physical connection closed" % session.client_address)
